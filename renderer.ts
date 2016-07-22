@@ -39,25 +39,68 @@ function gotStream(stream: MediaStream) {
 
     var recorder = new MediaRecorder(stream);
     var blobs: Blob[] = [];
-    recorder.ondataavailable = function(event) {
+    recorder.ondataavailable = (event: any) => {
         blobs.push(event.data);
     };
     recorder.start();
-    setTimeout(function() {
+    setTimeout(function () {
         recorder.stop();
+        // DEBUG
         console.log('captured ' + blobs.length);
-        var fileReader = new FileReader();
-        fileReader.onload = function() {
-            var arrayBuffer: ArrayBuffer = this.result;
-            fs.writeFile('./blobs.txt', arrayBuffer, 'binary', err=> console.error('failed to write', err));
+        var w: any = window;
+        w.blobs = blobs;
+        // END DEBUG
+        toArrayBuffer(new Blob(blobs), function(ab) {
+            var buffer = toBuffer(ab);
+            fs.writeFile('./video.webm', buffer, err => console.error('failed to write', err));
+        });
+        /*
+        fileReader.onload = () => {
+            var dataUrl: string = this.result;
+            var base64 = dataUrl.split(',')[1];
         };
-        fileReader.readAsArrayBuffer(blobs[0]);
+        fileReader.readAsDataURL(blob);
+        */
 
-    }, 5000); // 15 seconds
+    }, 15000); // 15 seconds
     //document.querySelector('video').src = URL.createObjectURL(stream);
 }
 
 function getUserMediaError(e: Error) {
     console.log('getUserMediaError', e);
     throw e;
+}
+
+function toArrayBuffer(blob: Blob, cb: (ab: ArrayBuffer) => void) {
+    var fileReader = new FileReader();
+    fileReader.onload = function() {
+        var arrayBuffer: ArrayBuffer = this.result;
+        cb(arrayBuffer);
+    };
+    fileReader.readAsArrayBuffer(blob);
+}
+
+function toBuffer(ab: ArrayBuffer) {
+    let buffer = new Buffer(ab.byteLength);
+    let arr = new Uint8Array(ab);
+    for (let i = 0; i < arr.byteLength; i++) {
+        buffer[i] = arr[i];
+    }
+    return buffer;
+}
+
+function toBufferConcat(abArray: ArrayBuffer[]) {
+    let len = 0;
+    abArray.forEach(ab => { len += ab.byteLength });
+
+    let buffer = new Buffer(len);
+    let bIndex = 0;
+    for (let ab of abArray) {
+        let arr = new Uint8Array(ab);
+        for (let aIndex = 0; aIndex < arr.byteLength; aIndex++) {
+            buffer[bIndex] = arr[aIndex];
+            bIndex++;
+        }
+    }
+    return buffer;
 }
