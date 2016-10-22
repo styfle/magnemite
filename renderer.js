@@ -37,19 +37,19 @@ function gotStream(stream) {
         blobs.push(event.data);
     };
     recorder.start();
-    setTimeout(function () {
+    setTimeout(() => {
         recorder.stop();
         console.log('captured ' + blobs.length);
         const w = window;
         w.blobs = blobs;
         toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), function (ab) {
             const buffer = toBuffer(ab);
-            fs_1.writeFile('./videos/video4.webm', buffer, err => {
+            fs_1.writeFile('./videos/video5.webm', buffer, err => {
                 if (err) {
-                    alert('Failed to save video');
+                    alert('Failed to save video ' + err);
                 }
                 else {
-                    console.error('Saved video!');
+                    console.log('Saved video!');
                 }
             });
         });

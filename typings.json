@@ -1,0 +1,6 @@
+{
+  "globalDependencies": {
+    "node": "registry:env/node#6.0.0+20161019193037",
+    "electron": "registry:env/electron#0.37.6+20160909065630"
+  }
+}

@@ -1,8 +1,8 @@
 {
   "resolution": "main",
   "tree": {
-    "src": "https://raw.githubusercontent.com/typed-typings/env-electron/881826440171809e644a827fd3f85ba3c96a0422/typings.json",
-    "raw": "registry:env/electron#0.37.6+20160416165306",
+    "src": "https://raw.githubusercontent.com/types/env-electron/33b7814e99a685288e87a8756167d3230acaefeb/typings.json",
+    "raw": "registry:env/electron#0.37.6+20160909065630",
     "main": "index.d.ts",
     "version": "0.37.4",
     "files": [
@@ -37,7 +37,6 @@
       "lib/web-view.d.ts",
       "lib/window-open.d.ts"
     ],
-    "global": false,
     "name": "electron",
     "type": "typings"
   }
