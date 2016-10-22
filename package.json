@@ -1,7 +1,7 @@
 {
-  "name": "electron-quick-start",
+  "name": "magnemite",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "description": "A website recorder useful for getting repro steps from an end user",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/electron/electron-quick-start.git"
+    "url": "git+https://github.com/styfle/magnemite.git"
   },
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "styfle",
+  "license": "MIT",
   "bugs": {
-    "url": "https://github.com/electron/electron-quick-start/issues"
+    "url": "https://github.com/styfle/magnemite/issues"
   },
-  "homepage": "https://github.com/electron/electron-quick-start#readme",
+  "homepage": "https://github.com/styfle/magnemite#readme",
   "devDependencies": {
     "electron-prebuilt": "^1.2.0"
   },

@@ -2,14 +2,14 @@
 const electron_1 = require('electron');
 const fs = require('fs');
 const SECRET_KEY = 'ELECTRON_APP_SHELL';
-var title = document.title;
+const title = document.title;
 document.title = SECRET_KEY;
 electron_1.desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
     if (error)
         throw error;
     console.log('sources', sources);
     for (let i = 0; i < sources.length; ++i) {
-        var src = sources[i];
+        let src = sources[i];
         if (src.name === SECRET_KEY) {
             document.title = title;
             navigator.webkitGetUserMedia({
@@ -40,20 +40,20 @@ function gotStream(stream) {
     setTimeout(function () {
         recorder.stop();
         console.log('captured ' + blobs.length);
-        var w = window;
+        const w = window;
         w.blobs = blobs;
-        toArrayBuffer(new Blob(blobs), function (ab) {
-            var buffer = toBuffer(ab);
-            fs.writeFile('./video.webm', buffer, err => console.error('failed to write', err));
+        toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), function (ab) {
+            const buffer = toBuffer(ab);
+            fs.writeFile('./videos/video3.webm', buffer, err => console.error('failed to write', err));
         });
-    }, 15000);
+    }, 5000);
 }
 function getUserMediaError(e) {
     console.log('getUserMediaError', e);
     throw e;
 }
 function toArrayBuffer(blob, cb) {
-    var fileReader = new FileReader();
+    let fileReader = new FileReader();
     fileReader.onload = function () {
         var arrayBuffer = this.result;
         cb(arrayBuffer);

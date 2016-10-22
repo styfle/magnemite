@@ -5,14 +5,14 @@
 import {desktopCapturer} from 'electron';
 import * as fs from 'fs';
 const SECRET_KEY = 'ELECTRON_APP_SHELL'
-var title = document.title;
+const title = document.title;
 document.title = SECRET_KEY
 
 desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
     if (error) throw error;
     console.log('sources', sources)
     for (let i = 0; i < sources.length; ++i) {
-        var src = sources[i];
+        let src = sources[i];
         if (src.name === SECRET_KEY) {
             document.title = title;
 
@@ -47,12 +47,12 @@ function gotStream(stream: MediaStream) {
         recorder.stop();
         // DEBUG
         console.log('captured ' + blobs.length);
-        var w: any = window;
+        const w: any = window;
         w.blobs = blobs;
         // END DEBUG
-        toArrayBuffer(new Blob(blobs), function(ab) {
-            var buffer = toBuffer(ab);
-            fs.writeFile('./video.webm', buffer, err => console.error('failed to write', err));
+        toArrayBuffer(new Blob(blobs, {type: 'video/webm'}), function(ab) {
+            const buffer = toBuffer(ab);
+            fs.writeFile('./videos/video3.webm', buffer, err => console.error('failed to write', err));
         });
         /*
         fileReader.onload = () => {
@@ -62,7 +62,7 @@ function gotStream(stream: MediaStream) {
         fileReader.readAsDataURL(blob);
         */
 
-    }, 15000); // 15 seconds
+    }, 5000); // 5 seconds
     //document.querySelector('video').src = URL.createObjectURL(stream);
 }
 
@@ -72,7 +72,7 @@ function getUserMediaError(e: Error) {
 }
 
 function toArrayBuffer(blob: Blob, cb: (ab: ArrayBuffer) => void) {
-    var fileReader = new FileReader();
+    let fileReader = new FileReader();
     fileReader.onload = function() {
         var arrayBuffer: ArrayBuffer = this.result;
         cb(arrayBuffer);
