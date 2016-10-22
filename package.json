@@ -2,6 +2,7 @@
   "name": "magnemite",
   "version": "1.0.0",
   "description": "A website recorder useful for getting repro steps from an end user",
+  "productName": "Magnemite",
   "main": "main.js",
   "scripts": {
     "start": "electron .",

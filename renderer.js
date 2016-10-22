@@ -1,6 +1,6 @@
 "use strict";
 const electron_1 = require('electron');
-const fs = require('fs');
+const fs_1 = require('fs');
 const SECRET_KEY = 'ELECTRON_APP_SHELL';
 const title = document.title;
 document.title = SECRET_KEY;
@@ -31,8 +31,8 @@ electron_1.desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, s
 });
 function gotStream(stream) {
     console.log(typeof stream, stream);
-    var recorder = new MediaRecorder(stream);
-    var blobs = [];
+    let recorder = new MediaRecorder(stream);
+    let blobs = [];
     recorder.ondataavailable = (event) => {
         blobs.push(event.data);
     };
@@ -44,7 +44,14 @@ function gotStream(stream) {
         w.blobs = blobs;
         toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), function (ab) {
             const buffer = toBuffer(ab);
-            fs.writeFile('./videos/video3.webm', buffer, err => console.error('failed to write', err));
+            fs_1.writeFile('./videos/video4.webm', buffer, err => {
+                if (err) {
+                    alert('Failed to save video');
+                }
+                else {
+                    console.error('Saved video!');
+                }
+            });
         });
     }, 5000);
 }
@@ -55,7 +62,7 @@ function getUserMediaError(e) {
 function toArrayBuffer(blob, cb) {
     let fileReader = new FileReader();
     fileReader.onload = function () {
-        var arrayBuffer = this.result;
+        let arrayBuffer = this.result;
         cb(arrayBuffer);
     };
     fileReader.readAsArrayBuffer(blob);

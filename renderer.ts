@@ -3,14 +3,14 @@
 // All of the Node.js APIs are available in this process.
 // In the renderer process.
 import {desktopCapturer} from 'electron';
-import * as fs from 'fs';
+import {writeFile} from 'fs';
 const SECRET_KEY = 'ELECTRON_APP_SHELL'
 const title = document.title;
 document.title = SECRET_KEY
 
 desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
     if (error) throw error;
-    console.log('sources', sources)
+    console.log('sources', sources);
     for (let i = 0; i < sources.length; ++i) {
         let src = sources[i];
         if (src.name === SECRET_KEY) {
@@ -37,13 +37,13 @@ desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => 
 function gotStream(stream: MediaStream) {
     console.log(typeof stream, stream);
 
-    var recorder = new MediaRecorder(stream);
-    var blobs: Blob[] = [];
+    let recorder = new MediaRecorder(stream);
+    let blobs: Blob[] = [];
     recorder.ondataavailable = (event: any) => {
         blobs.push(event.data);
     };
     recorder.start();
-    setTimeout(function () {
+    setTimeout(() => {
         recorder.stop();
         // DEBUG
         console.log('captured ' + blobs.length);
@@ -52,7 +52,13 @@ function gotStream(stream: MediaStream) {
         // END DEBUG
         toArrayBuffer(new Blob(blobs, {type: 'video/webm'}), function(ab) {
             const buffer = toBuffer(ab);
-            fs.writeFile('./videos/video3.webm', buffer, err => console.error('failed to write', err));
+            writeFile('./videos/video5.webm', buffer, err => {
+                if (err) {
+                    alert('Failed to save video ' + err);
+                } else {
+                    console.log('Saved video!');
+                }
+            });
         });
         /*
         fileReader.onload = () => {
@@ -74,7 +80,7 @@ function getUserMediaError(e: Error) {
 function toArrayBuffer(blob: Blob, cb: (ab: ArrayBuffer) => void) {
     let fileReader = new FileReader();
     fileReader.onload = function() {
-        var arrayBuffer: ArrayBuffer = this.result;
+        let arrayBuffer: ArrayBuffer = this.result;
         cb(arrayBuffer);
     };
     fileReader.readAsArrayBuffer(blob);
