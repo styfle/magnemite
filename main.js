@@ -3,9 +3,11 @@ const electron_1 = require('electron');
 const menu_1 = require('./menu');
 let mainWindow;
 function createWindow() {
-    mainWindow = new electron_1.BrowserWindow({ width: 800, height: 600 });
+    mainWindow = new electron_1.BrowserWindow({ width: 1024, height: 768 });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
-    mainWindow.webContents.openDevTools();
+    if (process.env['NODE_ENV'] === 'development') {
+        mainWindow.webContents.openDevTools();
+    }
     mainWindow.on('closed', () => {
         mainWindow = null;
     });

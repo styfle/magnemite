@@ -6,9 +6,11 @@ import {setMenu} from './menu';
 let mainWindow: Electron.BrowserWindow;
 
 function createWindow() {
-    mainWindow = new BrowserWindow({ width: 800, height: 600 });
+    mainWindow = new BrowserWindow({ width: 1024, height: 768 });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
-    mainWindow.webContents.openDevTools();
+    if (process.env['NODE_ENV'] === 'development') {
+        mainWindow.webContents.openDevTools();
+    }
 
     mainWindow.on('closed', () => {
         mainWindow = null;

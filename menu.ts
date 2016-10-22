@@ -35,43 +35,6 @@ export function setMenu(appname: string) {
             ]
         },
         {
-            label: 'View',
-            submenu: [
-                {
-                    label: 'Reload',
-                    accelerator: 'CmdOrCtrl+R',
-                    click(item: Electron.MenuItem, focusedWindow: Electron.BrowserWindow) {
-                        if (focusedWindow) focusedWindow.reload()
-                    }
-                },
-                {
-                    label: 'Toggle Developer Tools',
-                    accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-                    click(item: Electron.MenuItem, focusedWindow: Electron.BrowserWindow) {
-                        if (focusedWindow) focusedWindow.webContents.toggleDevTools()
-                    }
-                },
-                {
-                    type: 'separator'
-                },
-                {
-                    role: 'resetzoom'
-                },
-                {
-                    role: 'zoomin'
-                },
-                {
-                    role: 'zoomout'
-                },
-                {
-                    type: 'separator'
-                },
-                {
-                    role: 'togglefullscreen'
-                }
-            ]
-        },
-        {
             role: 'window',
             submenu: [
                 {
@@ -85,6 +48,13 @@ export function setMenu(appname: string) {
         {
             role: 'help',
             submenu: [
+                {
+                    label: 'Toggle Developer Tools',
+                    accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+                    click(item: Electron.MenuItem, focusedWindow: Electron.BrowserWindow) {
+                        if (focusedWindow) focusedWindow.webContents.toggleDevTools()
+                    }
+                },
                 {
                     label: 'Report Issue',
                     click() { require('electron').shell.openExternal('http://electron.atom.io') }
