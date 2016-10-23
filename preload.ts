@@ -1,11 +1,19 @@
 //alert('hello');
 import {startRecording, stopRecording} from './renderer';
-window.onload = function() {
+import {remote} from 'electron';
 
-    //var r = require('./renderer.js');
-    startRecording(99);
+window.onload = function() {
+    let counts = remote.getGlobal('counts');
+    counts.recordingNumber++;
+
+    startRecording(counts.recordingNumber);
+
     var w: any = window;
     w['__stopRecording'] = stopRecording;
     //setTimeout(function() { stopRecording(); }, 15000);
 
+};
+
+window.onunload = function() {
+    stopRecording();
 };

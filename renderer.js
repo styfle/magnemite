@@ -48,6 +48,10 @@ function handleStream(stream) {
 }
 function stopRecording() {
     console.log('stopRecording', seqNumber);
+    if (!recorder) {
+        console.log('nothing to stop', seqNumber);
+        return;
+    }
     recorder.stop();
     toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), function (ab) {
         const buffer = toBuffer(ab);

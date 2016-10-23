@@ -37,16 +37,24 @@
             forward.addEventListener('click', () => {
                 webview.goForward();
             });
+            /*
+            webview.addEventListener('will-navigate', () => {
+                webview.executeJavaScript('window.__stopRecording()');
+            });
+            */
 
             issue.addEventListener('click', () => {
                 webview.executeJavaScript('window.__stopRecording()');
             });
 
-            if (process.env['NODE_ENV'] === 'development') {
-                webview.addEventListener('dom-ready', () => {
+
+            webview.addEventListener('dom-ready', () => {
+                if (process.env['NODE_ENV'] === 'development') {
                     webview.openDevTools();
-                });
-            }
+                }
+                webview.executeJavaScript('window.__stopRecording()');
+            });
+
         }
     </script>
 </body>

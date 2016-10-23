@@ -7,6 +7,11 @@ let mainWindow: Electron.BrowserWindow;
 
 let seqNumber = 0;
 
+const g: any = global;
+g['counts'] = {
+    recordingNumber: 0
+};
+
 function createWindow() {
     mainWindow = new BrowserWindow({ width: 1024, height: 768 });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
