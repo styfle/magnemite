@@ -59,7 +59,8 @@ export function setMenu(win: Electron.BrowserWindow, appname: string) {
                     label: 'Report Issue',
                     click() {
                         //require('electron').shell.openExternal('http://electron.atom.io')
-                        win.webContents.executeJavaScript('window.__stopRecording()', false, console.log);
+                        //win.webContents.executeJavaScript('window.__stopRecording()', false, console.log);
+                        win.webContents.executeJavaScript('stopRecording()', false, console.log);
                     }
                 }
             ]

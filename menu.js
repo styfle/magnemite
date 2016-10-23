@@ -59,7 +59,7 @@ function setMenu(win, appname) {
                 {
                     label: 'Report Issue',
                     click() {
-                        win.webContents.executeJavaScript('window.__stopRecording()', false, console.log);
+                        win.webContents.executeJavaScript('stopRecording()', false, console.log);
                     }
                 }
             ]

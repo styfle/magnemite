@@ -15,6 +15,7 @@ function createWindow() {
         mainWindow = null;
     });
 
+    /*
     mainWindow.on('will-navigate', () => {
         mainWindow.webContents.executeJavaScript(`console.log('will navigate'); if ('__stopRecording' in window) __stopRecording();`);
     });
@@ -23,6 +24,7 @@ function createWindow() {
         seqNumber += 1;
         mainWindow.webContents.executeJavaScript(`console.log('did navigate'); var r = require('./renderer.js'); r.startRecording(${seqNumber});`);
     });
+    */
 
     setMenu(mainWindow, app.getName());
 }

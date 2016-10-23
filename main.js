@@ -9,13 +9,6 @@ function createWindow() {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
-    mainWindow.on('will-navigate', () => {
-        mainWindow.webContents.executeJavaScript(`console.log('will navigate'); if ('__stopRecording' in window) __stopRecording();`);
-    });
-    mainWindow.on('did-navigate', () => {
-        seqNumber += 1;
-        mainWindow.webContents.executeJavaScript(`console.log('did navigate'); var r = require('./renderer.js'); r.startRecording(${seqNumber});`);
-    });
     menu_1.setMenu(mainWindow, electron_1.app.getName());
 }
 electron_1.app.on('ready', createWindow);
