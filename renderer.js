@@ -31,20 +31,20 @@ electron_1.desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, s
 });
 function gotStream(stream) {
     console.log(typeof stream, stream);
-    let recorder = new MediaRecorder(stream);
-    let blobs = [];
+    const w = window;
+    const recorder = new MediaRecorder(stream);
+    const blobs = [];
     recorder.ondataavailable = (event) => {
         blobs.push(event.data);
     };
     recorder.start();
-    setTimeout(() => {
+    function stopRecording() {
         recorder.stop();
         console.log('captured ' + blobs.length);
-        const w = window;
         w.blobs = blobs;
         toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), function (ab) {
             const buffer = toBuffer(ab);
-            fs_1.writeFile('./videos/video5.webm', buffer, err => {
+            fs_1.writeFile('./videos/video6.webm', buffer, err => {
                 if (err) {
                     alert('Failed to save video ' + err);
                 }
@@ -53,7 +53,8 @@ function gotStream(stream) {
                 }
             });
         });
-    }, 5000);
+    }
+    w.__stopRecording = stopRecording;
 }
 function getUserMediaError(e) {
     console.log('getUserMediaError', e);

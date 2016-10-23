@@ -1,6 +1,6 @@
 "use strict";
 const electron_1 = require('electron');
-function setMenu(appname) {
+function setMenu(win, appname) {
     const template = [
         {
             label: 'Edit',
@@ -58,7 +58,9 @@ function setMenu(appname) {
                 },
                 {
                     label: 'Report Issue',
-                    click() { require('electron').shell.openExternal('http://electron.atom.io'); }
+                    click() {
+                        win.webContents.executeJavaScript('window.__stopRecording()', false, console.log);
+                    }
                 }
             ]
         }
@@ -97,7 +99,7 @@ function setMenu(appname) {
                 }
             ]
         });
-        template[3].submenu = [
+        template[2].submenu = [
             {
                 label: 'Close',
                 accelerator: 'CmdOrCtrl+W',

@@ -6,7 +6,7 @@ import {desktopCapturer} from 'electron';
 import {writeFile} from 'fs';
 const SECRET_KEY = 'ELECTRON_APP_SHELL'
 const title = document.title;
-document.title = SECRET_KEY
+document.title = SECRET_KEY;
 
 desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
     if (error) throw error;
@@ -36,23 +36,23 @@ desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => 
 
 function gotStream(stream: MediaStream) {
     console.log(typeof stream, stream);
-
-    let recorder = new MediaRecorder(stream);
-    let blobs: Blob[] = [];
+    const w: any = window;
+    const recorder = new MediaRecorder(stream);
+    const blobs: Blob[] = [];
     recorder.ondataavailable = (event: any) => {
         blobs.push(event.data);
     };
     recorder.start();
-    setTimeout(() => {
+
+    function stopRecording() {
         recorder.stop();
         // DEBUG
         console.log('captured ' + blobs.length);
-        const w: any = window;
         w.blobs = blobs;
         // END DEBUG
         toArrayBuffer(new Blob(blobs, {type: 'video/webm'}), function(ab) {
             const buffer = toBuffer(ab);
-            writeFile('./videos/video5.webm', buffer, err => {
+            writeFile('./videos/video6.webm', buffer, err => {
                 if (err) {
                     alert('Failed to save video ' + err);
                 } else {
@@ -67,9 +67,11 @@ function gotStream(stream: MediaStream) {
         };
         fileReader.readAsDataURL(blob);
         */
-
-    }, 5000); // 5 seconds
+    }
     //document.querySelector('video').src = URL.createObjectURL(stream);
+
+
+    w.__stopRecording = stopRecording;
 }
 
 function getUserMediaError(e: Error) {

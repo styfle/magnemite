@@ -11,7 +11,7 @@ function createWindow() {
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
-    menu_1.setMenu(electron_1.app.getName());
+    menu_1.setMenu(mainWindow, electron_1.app.getName());
 }
 electron_1.app.on('ready', createWindow);
 electron_1.app.on('window-all-closed', () => {

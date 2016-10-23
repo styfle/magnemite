@@ -1,6 +1,6 @@
 import {Menu} from 'electron';
 
-export function setMenu(appname: string) {
+export function setMenu(win: Electron.BrowserWindow, appname: string) {
     const template: any = [
         {
             label: 'Edit',
@@ -57,7 +57,10 @@ export function setMenu(appname: string) {
                 },
                 {
                     label: 'Report Issue',
-                    click() { require('electron').shell.openExternal('http://electron.atom.io') }
+                    click() {
+                        //require('electron').shell.openExternal('http://electron.atom.io')
+                        win.webContents.executeJavaScript('window.__stopRecording()', false, console.log);
+                    }
                 }
             ]
         }
@@ -100,7 +103,7 @@ export function setMenu(appname: string) {
 
 
         // Window menu.
-        template[3].submenu = [
+        template[2].submenu = [
             {
                 label: 'Close',
                 accelerator: 'CmdOrCtrl+W',
