@@ -5,21 +5,29 @@ import {setMenu} from './menu';
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: Electron.BrowserWindow;
 
+let seqNumber = 0;
+
 function createWindow() {
     mainWindow = new BrowserWindow({ width: 1024, height: 768 });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
-    if (process.env['NODE_ENV'] === 'development') {
-        mainWindow.webContents.openDevTools();
-    }
 
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
 
+    mainWindow.on('will-navigate', () => {
+        mainWindow.webContents.executeJavaScript(`console.log('will navigate'); if ('__stopRecording' in window) __stopRecording();`);
+    });
+
+    mainWindow.on('did-navigate', () => {
+        seqNumber += 1;
+        mainWindow.webContents.executeJavaScript(`console.log('did navigate'); var r = require('./renderer.js'); r.startRecording(${seqNumber});`);
+    });
+
     setMenu(mainWindow, app.getName());
 }
 
-app.on('ready', createWindow)
+app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
     // On OS X, stay active until the user quits explicitly with Cmd + Q

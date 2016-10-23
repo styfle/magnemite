@@ -2,14 +2,19 @@
 const electron_1 = require('electron');
 const menu_1 = require('./menu');
 let mainWindow;
+let seqNumber = 0;
 function createWindow() {
     mainWindow = new electron_1.BrowserWindow({ width: 1024, height: 768 });
     mainWindow.loadURL(`file://${__dirname}/index.html`);
-    if (process.env['NODE_ENV'] === 'development') {
-        mainWindow.webContents.openDevTools();
-    }
     mainWindow.on('closed', () => {
         mainWindow = null;
+    });
+    mainWindow.on('will-navigate', () => {
+        mainWindow.webContents.executeJavaScript(`console.log('will navigate'); if ('__stopRecording' in window) __stopRecording();`);
+    });
+    mainWindow.on('did-navigate', () => {
+        seqNumber += 1;
+        mainWindow.webContents.executeJavaScript(`console.log('did navigate'); var r = require('./renderer.js'); r.startRecording(${seqNumber});`);
     });
     menu_1.setMenu(mainWindow, electron_1.app.getName());
 }

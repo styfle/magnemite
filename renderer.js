@@ -1,63 +1,70 @@
 "use strict";
 const electron_1 = require('electron');
 const fs_1 = require('fs');
-const SECRET_KEY = 'ELECTRON_APP_SHELL';
-const title = document.title;
-document.title = SECRET_KEY;
-electron_1.desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
-    if (error)
-        throw error;
-    console.log('sources', sources);
-    for (let i = 0; i < sources.length; ++i) {
-        let src = sources[i];
-        if (src.name === SECRET_KEY) {
-            document.title = title;
-            navigator.webkitGetUserMedia({
-                audio: false,
-                video: {
-                    mandatory: {
-                        chromeMediaSource: 'desktop',
-                        chromeMediaSourceId: src.id,
-                        minWidth: 1280,
-                        maxWidth: 1280,
-                        minHeight: 720,
-                        maxHeight: 720
+const SECRET_KEY = 'Magnemite';
+var recorder;
+var blobs = [];
+var seqNumber;
+function startRecording(num) {
+    seqNumber = num;
+    console.log('startRecording', seqNumber);
+    const title = document.title;
+    document.title = SECRET_KEY;
+    electron_1.desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
+        if (error)
+            throw error;
+        console.log('sources', sources);
+        for (let i = 0; i < sources.length; i++) {
+            let src = sources[i];
+            if (src.name === SECRET_KEY) {
+                document.title = title;
+                navigator.webkitGetUserMedia({
+                    audio: false,
+                    video: {
+                        mandatory: {
+                            chromeMediaSource: 'desktop',
+                            chromeMediaSourceId: src.id,
+                            minWidth: 800,
+                            maxWidth: 1280,
+                            minHeight: 600,
+                            maxHeight: 720
+                        }
                     }
-                }
-            }, gotStream, getUserMediaError);
-            return;
+                }, handleStream, handleUserMediaError);
+                return;
+            }
         }
-    }
-});
-function gotStream(stream) {
-    console.log(typeof stream, stream);
-    const w = window;
-    const recorder = new MediaRecorder(stream);
-    const blobs = [];
+    });
+}
+exports.startRecording = startRecording;
+function handleStream(stream) {
+    console.log('handleStream', seqNumber);
+    recorder = new MediaRecorder(stream);
+    blobs = [];
     recorder.ondataavailable = (event) => {
         blobs.push(event.data);
     };
     recorder.start();
-    function stopRecording() {
-        recorder.stop();
-        console.log('captured ' + blobs.length);
-        w.blobs = blobs;
-        toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), function (ab) {
-            const buffer = toBuffer(ab);
-            fs_1.writeFile('./videos/video6.webm', buffer, err => {
-                if (err) {
-                    alert('Failed to save video ' + err);
-                }
-                else {
-                    console.log('Saved video!');
-                }
-            });
-        });
-    }
-    w.__stopRecording = stopRecording;
 }
-function getUserMediaError(e) {
-    console.log('getUserMediaError', e);
+function stopRecording() {
+    console.log('stopRecording', seqNumber);
+    recorder.stop();
+    toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), function (ab) {
+        const buffer = toBuffer(ab);
+        const file = `./videos/video-nav-${seqNumber}.webm`;
+        fs_1.writeFile(file, buffer, err => {
+            if (err) {
+                alert('Failed to save video ' + err);
+            }
+            else {
+                console.log('Saved video: ' + file);
+            }
+        });
+    });
+}
+exports.stopRecording = stopRecording;
+function handleUserMediaError(e) {
+    console.error('handleUserMediaError', e);
     throw e;
 }
 function toArrayBuffer(blob, cb) {

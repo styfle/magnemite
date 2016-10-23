@@ -15,3 +15,9 @@ TODO
 ## Contributing
 
 TODO - npm install
+
+## TODO Items
+
+* Wire up button to stop recording
+* Add back and forward buttons
+* Use proper flexbox for top button bar

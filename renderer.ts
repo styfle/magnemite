@@ -4,78 +4,73 @@
 // In the renderer process.
 import {desktopCapturer} from 'electron';
 import {writeFile} from 'fs';
-const SECRET_KEY = 'ELECTRON_APP_SHELL'
-const title = document.title;
-document.title = SECRET_KEY;
+const SECRET_KEY = 'Magnemite';
 
-desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
-    if (error) throw error;
-    console.log('sources', sources);
-    for (let i = 0; i < sources.length; ++i) {
-        let src = sources[i];
-        if (src.name === SECRET_KEY) {
-            document.title = title;
+var recorder: any;
+var blobs: Blob[] = [];
+var seqNumber: number;
 
-            navigator.webkitGetUserMedia({
-                audio: false,
-                video: {
-                    mandatory: {
-                        chromeMediaSource: 'desktop',
-                        chromeMediaSourceId: src.id,
-                        minWidth: 1280,
-                        maxWidth: 1280,
-                        minHeight: 720,
-                        maxHeight: 720
+export function startRecording(num: number) {
+    seqNumber = num;
+    console.log('startRecording', seqNumber);
+    const title = document.title;
+    document.title = SECRET_KEY;
+
+    desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
+        if (error) throw error;
+        console.log('sources', sources);
+        for (let i = 0; i < sources.length; i++) {
+            let src = sources[i];
+            if (src.name === SECRET_KEY) {
+                document.title = title;
+
+                navigator.webkitGetUserMedia({
+                    audio: false,
+                    video: {
+                        mandatory: {
+                            chromeMediaSource: 'desktop',
+                            chromeMediaSourceId: src.id,
+                            minWidth: 800,
+                            maxWidth: 1280,
+                            minHeight: 600,
+                            maxHeight: 720
+                        }
                     }
-                }
-            }, gotStream, getUserMediaError);
-            return;
+                }, handleStream, handleUserMediaError);
+                return;
+            }
         }
-    }
-});
+    });
+}
 
-function gotStream(stream: MediaStream) {
-    console.log(typeof stream, stream);
-    const w: any = window;
-    const recorder = new MediaRecorder(stream);
-    const blobs: Blob[] = [];
+function handleStream(stream: MediaStream) {
+    console.log('handleStream', seqNumber);
+    recorder = new MediaRecorder(stream);
+    blobs = [];
     recorder.ondataavailable = (event: any) => {
         blobs.push(event.data);
     };
     recorder.start();
-
-    function stopRecording() {
-        recorder.stop();
-        // DEBUG
-        console.log('captured ' + blobs.length);
-        w.blobs = blobs;
-        // END DEBUG
-        toArrayBuffer(new Blob(blobs, {type: 'video/webm'}), function(ab) {
-            const buffer = toBuffer(ab);
-            writeFile('./videos/video6.webm', buffer, err => {
-                if (err) {
-                    alert('Failed to save video ' + err);
-                } else {
-                    console.log('Saved video!');
-                }
-            });
-        });
-        /*
-        fileReader.onload = () => {
-            var dataUrl: string = this.result;
-            var base64 = dataUrl.split(',')[1];
-        };
-        fileReader.readAsDataURL(blob);
-        */
-    }
-    //document.querySelector('video').src = URL.createObjectURL(stream);
-
-
-    w.__stopRecording = stopRecording;
 }
 
-function getUserMediaError(e: Error) {
-    console.log('getUserMediaError', e);
+export function stopRecording() {
+    console.log('stopRecording', seqNumber);
+    recorder.stop();
+    toArrayBuffer(new Blob(blobs, {type: 'video/webm'}), function(ab) {
+        const buffer = toBuffer(ab);
+        const file = `./videos/video-nav-${seqNumber}.webm`;
+        writeFile(file, buffer, err => {
+            if (err) {
+                alert('Failed to save video ' + err);
+            } else {
+                console.log('Saved video: ' + file);
+            }
+        });
+    });
+}
+
+function handleUserMediaError(e: Error) {
+    console.error('handleUserMediaError', e);
     throw e;
 }
 
