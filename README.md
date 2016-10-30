@@ -1,5 +1,7 @@
 # Magnemite
 
+![img](img/magnemite.gif)
+
 A website recorder useful for getting repro steps from an end user, built with Electron.
 
 TODO: insert image of pokemon
