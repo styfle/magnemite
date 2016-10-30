@@ -2,13 +2,16 @@
 
 ![img](img/magnemite.gif)
 
-A website recorder useful for getting repro steps from an end user, built with Electron.
+A screen recorder for websites, built with Electron.
 
-TODO: insert image of pokemon
+It's useful for getting repro steps from an end user, without needing them to explicitely tell you the steps.
+
+Just package conifgure and package Magnemite, tell them to use it as they normally use your website, and now you have a video of the issue!
+
 
 ## Installation
 
-TODO - download link
+TODO
 
 ## Usage
 
@@ -16,12 +19,11 @@ TODO
 
 ## Contributing
 
-TODO - npm install
-
-## TODO Items
-
-* Wire up button to stop recording
-* Use proper flexbox for top button bar
+```sh
+npm install
+npm run build
+npm start
+```
 
 ## Notes
 
