@@ -10,10 +10,9 @@ window.onload = function() {
 
     var w: any = window;
     w['__stopRecording'] = stopRecording;
-    //setTimeout(function() { stopRecording(); }, 15000);
 
 };
 
-window.onunload = function() {
-    stopRecording();
+window.onbeforeunload = function() {
+    //stopRecording();
 };

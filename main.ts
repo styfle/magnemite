@@ -5,8 +5,6 @@ import {setMenu} from './menu';
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: Electron.BrowserWindow;
 
-let seqNumber = 0;
-
 const g: any = global;
 g['counts'] = {
     recordingNumber: 0

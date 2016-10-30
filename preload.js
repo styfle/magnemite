@@ -8,6 +8,5 @@ window.onload = function () {
     var w = window;
     w['__stopRecording'] = renderer_1.stopRecording;
 };
-window.onunload = function () {
-    renderer_1.stopRecording();
+window.onbeforeunload = function () {
 };

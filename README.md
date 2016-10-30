@@ -19,5 +19,12 @@ TODO - npm install
 ## TODO Items
 
 * Wire up button to stop recording
-* Add back and forward buttons
 * Use proper flexbox for top button bar
+
+## Notes
+
+For more info on working with streams, buffers, byte arrays, and files, see the following:
+
+* [Convert a Buffer to ArrayBuffer](http://stackoverflow.com/a/12101012/266535)
+* [Saving huge files](http://stackoverflow.com/a/36523834/266535)
+* [Saving desktopCapturer to video file](http://stackoverflow.com/q/36753288/266535)

@@ -8,13 +8,13 @@
 </head>
 
 <body style="overflow:hidden;">
-	<div style="width:100%;height:10%">
+	<div style="width:100%;height:10vh">
 		<img id="loading" style="width:16px;height:16px" src='img/loading.gif' />
-        <button id="back">Back</button>
-        <button id="forward">Forward</button>
-        <button id="issue" style="color:green;background-color:orange;">Report Issue</button>
+        <button id="back" class="btn btn-default">Back</button>
+        <button id="forward" class="btn btn-default">Forward</button>
+        <button id="issue" class="btn btn-danger">Report Issue</button>
 	</div>
-	<webview id="webview" preload="./preload.js" src="http://google.com" style="position:absolute;width:100%;height:90%;"></webview>
+	<webview id="webview" preload="./preload.js" src="http://google.com" style="position:absolute;width:100%;height:90vh;"></webview>
 	<script>
         onload = () => {
             const webview = document.getElementById('webview');
@@ -24,10 +24,10 @@
             const forward = document.getElementById('forward');
 
             webview.addEventListener('did-start-loading', () => {
-                style.visibility = 'visible';
+                loading.style.visibility = 'visible';
             });
             webview.addEventListener('did-stop-loading', () => {
-                style.visibility = 'hidden';
+                loading.style.visibility = 'hidden';
             });
 
             back.addEventListener('click', () => {
@@ -37,11 +37,11 @@
             forward.addEventListener('click', () => {
                 webview.goForward();
             });
-            /*
-            webview.addEventListener('will-navigate', () => {
-                webview.executeJavaScript('window.__stopRecording()');
+
+            webview.addEventListener('will-navigate', (e) => {
+                webview.executeJavaScript(`console.log('will navigate'); if ('__stopRecording' in window) __stopRecording();`);
             });
-            */
+
 
             issue.addEventListener('click', () => {
                 webview.executeJavaScript('window.__stopRecording()');
@@ -52,7 +52,10 @@
                 if (process.env['NODE_ENV'] === 'development') {
                     webview.openDevTools();
                 }
-                webview.executeJavaScript('window.__stopRecording()');
+
+                back.disabled = !webview.canGoBack();
+                forward.disabled = !webview.canGoForward();
+                //webview.executeJavaScript('window.__stopRecording()');
             });
 
         }
