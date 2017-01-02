@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>Play All</title>
+</head>
+<body>
+    <video width="1180" height="620"></video>
+    <script>
+        let seqNumber = 0;
+        const video = document.querySelector('video');
+
+		function playNextVideo() {
+			seqNumber++;
+			const src = `../videos/video-nav-${seqNumber}.webm`;
+			video.setAttribute("src", src);
+			video.play();
+		}
+
+		video.addEventListener('ended', playNextVideo);
+
+		video.addEventListener('error', (err) => {
+			console.error('video error', err);
+		});
+
+		playNextVideo();
+    </script>
+</body>
+</html>

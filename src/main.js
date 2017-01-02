@@ -2,10 +2,6 @@
 const electron_1 = require('electron');
 const menu_1 = require('./menu');
 let mainWindow;
-const g = global;
-g['counts'] = {
-    recordingNumber: 0
-};
 function createWindow() {
     mainWindow = new electron_1.BrowserWindow({ width: 1024, height: 768 });
     mainWindow.loadURL(`file://${__dirname}/index.html`);

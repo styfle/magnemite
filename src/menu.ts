@@ -54,13 +54,6 @@ export function setMenu(win: Electron.BrowserWindow, appname: string) {
                     click(item: Electron.MenuItem, focusedWindow: Electron.BrowserWindow) {
                         if (focusedWindow) focusedWindow.webContents.toggleDevTools()
                     }
-                },
-                {
-                    label: 'Report Issue',
-                    click() {
-                        //require('electron').shell.openExternal('http://electron.atom.io')
-                        win.webContents.executeJavaScript('window.__stopRecording()', false, console.log);
-                    }
                 }
             ]
         }

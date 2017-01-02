@@ -55,12 +55,6 @@ function setMenu(win, appname) {
                         if (focusedWindow)
                             focusedWindow.webContents.toggleDevTools();
                     }
-                },
-                {
-                    label: 'Report Issue',
-                    click() {
-                        win.webContents.executeJavaScript('window.__stopRecording()', false, console.log);
-                    }
                 }
             ]
         }

@@ -14,7 +14,7 @@
         <button id="forward" class="btn btn-default">Forward</button>
         <button id="issue" class="btn btn-danger">Report Issue</button>
 	</div>
-	<webview id="webview" nodeintegration preload="./preload.js" src="http://google.com" style="position:absolute;width:100%;height:90vh;"></webview>
+	<webview id="webview" nodeintegration src="http://google.com" style="position:absolute;width:100%;height:90vh;"></webview>
 	<script>
         onload = () => {
             const webview = document.getElementById('webview');
@@ -49,7 +49,8 @@
             });
 
             issue.addEventListener('click', () => {
-                webview.executeJavaScript('window.__stopRecording()');
+                renderer.stopRecording(num);
+                alert('Recording saved to disk!');
             });
 
 
@@ -59,7 +60,6 @@
                 }
                 back.disabled = !webview.canGoBack();
                 forward.disabled = !webview.canGoForward();
-                //webview.executeJavaScript('window.__stopRecording()');
             });
 
         }
