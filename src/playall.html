@@ -1,12 +1,37 @@
 <html>
 <head>
     <title>Play All</title>
+	<style>
+		body, video {
+			text-align: center;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		h1 {
+			display: none;
+			cursor: pointer;
+			color: #4C8CFF;
+			text-decoration: underline;
+			font-family: Helvetica, Arial, sans-serif;
+			position: relative;
+			top: 200px;
+		}
+	</style>
 </head>
 <body>
-    <video width="1180" height="620"></video>
+	<h1>Play Again?</h1>
+	<video width="800" height="600"></video>
     <script>
         let seqNumber = 0;
         const video = document.querySelector('video');
+        const again = document.querySelector('h1');
+
+		function playFirstVideo() {
+			again.style.display = 'none';
+			video.style.display = 'block';
+			seqNumber = 0;
+			playNextVideo();
+		}
 
 		function playNextVideo() {
 			seqNumber++;
@@ -15,13 +40,16 @@
 			video.play();
 		}
 
+		function allDone() {
+			again.style.display = 'block';
+			video.style.display = 'none';
+		}
+
+		again.addEventListener('click', playFirstVideo);
 		video.addEventListener('ended', playNextVideo);
+		video.addEventListener('error', allDone);
 
-		video.addEventListener('error', (err) => {
-			console.error('video error', err);
-		});
-
-		playNextVideo();
+		playFirstVideo();
     </script>
 </body>
 </html>

@@ -5,6 +5,18 @@ const SECRET_KEY = 'Magnemite';
 var recorder;
 var blobs = [];
 var seqNumber;
+function deleteExistingVideos() {
+    const dir = './videos/';
+    fs_1.readdir('./videos', (err, files) => {
+        if (err)
+            console.error(err);
+        files.forEach(f => fs_1.unlink(dir + f, (err) => {
+            if (err)
+                console.error(err);
+        }));
+    });
+}
+exports.deleteExistingVideos = deleteExistingVideos;
 function startRecording(num) {
     seqNumber = num;
     console.log('startRecording', seqNumber);
@@ -53,12 +65,12 @@ function stopRecording() {
         return;
     }
     recorder.stop();
-    toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), function (ab) {
+    toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), (ab) => {
         const buffer = toBuffer(ab);
         const file = `./videos/video-nav-${seqNumber}.webm`;
         fs_1.writeFile(file, buffer, err => {
             if (err) {
-                alert('Failed to save video ' + err);
+                console.error('Failed to save video ' + err);
             }
             else {
                 console.log('Saved video: ' + file);
@@ -69,7 +81,6 @@ function stopRecording() {
 exports.stopRecording = stopRecording;
 function handleUserMediaError(e) {
     console.error('handleUserMediaError', e);
-    throw e;
 }
 function toArrayBuffer(blob, cb) {
     let fileReader = new FileReader();
@@ -84,20 +95,6 @@ function toBuffer(ab) {
     let arr = new Uint8Array(ab);
     for (let i = 0; i < arr.byteLength; i++) {
         buffer[i] = arr[i];
-    }
-    return buffer;
-}
-function toBufferConcat(abArray) {
-    let len = 0;
-    abArray.forEach(ab => { len += ab.byteLength; });
-    let buffer = new Buffer(len);
-    let bIndex = 0;
-    for (let ab of abArray) {
-        let arr = new Uint8Array(ab);
-        for (let aIndex = 0; aIndex < arr.byteLength; aIndex++) {
-            buffer[bIndex] = arr[aIndex];
-            bIndex++;
-        }
     }
     return buffer;
 }
