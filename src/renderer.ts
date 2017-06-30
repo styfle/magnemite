@@ -15,7 +15,7 @@ export function deleteExistingVideos() {
     readdir('./videos', (err, files) => {
         if (err) console.error(err);
         files.forEach(f => unlink(dir + f, (err) => {
-            if (err) console.error(err);
+            if (err) {console.error(err); }
         }));
     });
 }

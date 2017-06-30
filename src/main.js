@@ -1,6 +1,7 @@
 "use strict";
-const electron_1 = require('electron');
-const menu_1 = require('./menu');
+Object.defineProperty(exports, "__esModule", { value: true });
+const electron_1 = require("electron");
+const menu_1 = require("./menu");
 let mainWindow;
 function createWindow() {
     mainWindow = new electron_1.BrowserWindow({ width: 1024, height: 768 });

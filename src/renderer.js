@@ -1,6 +1,7 @@
 "use strict";
-const electron_1 = require('electron');
-const fs_1 = require('fs');
+Object.defineProperty(exports, "__esModule", { value: true });
+const electron_1 = require("electron");
+const fs_1 = require("fs");
 const SECRET_KEY = 'Magnemite';
 var recorder;
 var blobs = [];
@@ -11,8 +12,9 @@ function deleteExistingVideos() {
         if (err)
             console.error(err);
         files.forEach(f => fs_1.unlink(dir + f, (err) => {
-            if (err)
+            if (err) {
                 console.error(err);
+            }
         }));
     });
 }

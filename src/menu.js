@@ -1,5 +1,6 @@
 "use strict";
-const electron_1 = require('electron');
+Object.defineProperty(exports, "__esModule", { value: true });
+const electron_1 = require("electron");
 function setMenu(win, appname) {
     const template = [
         {
