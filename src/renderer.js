@@ -11,7 +11,7 @@ function deleteExistingVideos() {
     fs_1.readdir('./videos', (err, files) => {
         if (err)
             console.error(err);
-        files.forEach(f => fs_1.unlink(dir + f, (err) => {
+        files.filter(f => f.endsWith('.webm')).forEach(f => fs_1.unlink(dir + f, (err) => {
             if (err) {
                 console.error(err);
             }
@@ -58,6 +58,9 @@ function handleStream(stream) {
     blobs = [];
     recorder.ondataavailable = (event) => {
         blobs.push(event.data);
+    };
+    recorder.onerror = (err) => {
+        console.error('recorder error ', err);
     };
     recorder.start();
 }

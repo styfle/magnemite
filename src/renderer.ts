@@ -14,7 +14,7 @@ export function deleteExistingVideos() {
     const dir = './videos/';
     readdir('./videos', (err, files) => {
         if (err) console.error(err);
-        files.forEach(f => unlink(dir + f, (err) => {
+        files.filter(f => f.endsWith('.webm')).forEach(f => unlink(dir + f, (err) => {
             if (err) {console.error(err); }
         }));
     });
@@ -61,6 +61,9 @@ function handleStream(stream: MediaStream) {
     blobs = [];
     recorder.ondataavailable = (event) => {
         blobs.push(event.data);
+    };
+    recorder.onerror = (err) => {
+        console.error('recorder error ', err);
     };
     recorder.start();
 }

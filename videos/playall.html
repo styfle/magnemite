@@ -35,8 +35,7 @@
 
 		function playNextVideo() {
 			seqNumber++;
-			const src = `../videos/video-nav-${seqNumber}.webm`;
-			video.setAttribute("src", src);
+			video.setAttribute('src', `./video-nav-${seqNumber}.webm`);
 			video.play();
 		}
 
