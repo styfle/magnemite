@@ -6,7 +6,7 @@ import {desktopCapturer} from 'electron';
 import {writeFile, readdir, unlink} from 'fs';
 const SECRET_KEY = 'Magnemite';
 
-var recorder: any;
+var recorder: MediaRecorder;
 var blobs: Blob[] = [];
 var seqNumber: number;
 
@@ -23,33 +23,35 @@ export function deleteExistingVideos() {
 export function startRecording(num: number) {
     seqNumber = num;
     console.log('startRecording', seqNumber);
-    const title = document.title;
+    const origTitle = document.title;
     document.title = SECRET_KEY;
 
     desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
         if (error) throw error;
         console.log('sources', sources);
-        for (let i = 0; i < sources.length; i++) {
-            let src = sources[i];
-            if (src.name === SECRET_KEY) {
-                document.title = title;
-
-                navigator.webkitGetUserMedia({
-                    audio: false,
-                    video: {
-                        mandatory: {
-                            chromeMediaSource: 'desktop',
-                            chromeMediaSourceId: src.id,
-                            minWidth: 800,
-                            maxWidth: 1280,
-                            minHeight: 600,
-                            maxHeight: 720
-                        }
-                    }
-                }, handleStream, handleUserMediaError);
-                return;
-            }
+        const matching = sources.filter(src => src.name === SECRET_KEY);
+        if (matching.length === 0) {
+            console.error('unable to find matching source');
+            return;
         }
+        const source = matching[0];
+        console.log('found matching source ', source.id);
+        document.title = origTitle;
+
+        navigator.webkitGetUserMedia({
+            audio: false,
+            video: {
+                mandatory: {
+                    chromeMediaSource: 'desktop',
+                    chromeMediaSourceId: source.id,
+                    minWidth: 800,
+                    maxWidth: 1280,
+                    minHeight: 600,
+                    maxHeight: 720
+                }
+            }
+        }, handleStream, handleUserMediaError);
+    
     });
 }
 
@@ -57,7 +59,7 @@ function handleStream(stream: MediaStream) {
     console.log('handleStream', seqNumber);
     recorder = new MediaRecorder(stream);
     blobs = [];
-    recorder.ondataavailable = (event: any) => {
+    recorder.ondataavailable = (event) => {
         blobs.push(event.data);
     };
     recorder.start();

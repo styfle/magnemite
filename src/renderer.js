@@ -22,32 +22,33 @@ exports.deleteExistingVideos = deleteExistingVideos;
 function startRecording(num) {
     seqNumber = num;
     console.log('startRecording', seqNumber);
-    const title = document.title;
+    const origTitle = document.title;
     document.title = SECRET_KEY;
     electron_1.desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
         if (error)
             throw error;
         console.log('sources', sources);
-        for (let i = 0; i < sources.length; i++) {
-            let src = sources[i];
-            if (src.name === SECRET_KEY) {
-                document.title = title;
-                navigator.webkitGetUserMedia({
-                    audio: false,
-                    video: {
-                        mandatory: {
-                            chromeMediaSource: 'desktop',
-                            chromeMediaSourceId: src.id,
-                            minWidth: 800,
-                            maxWidth: 1280,
-                            minHeight: 600,
-                            maxHeight: 720
-                        }
-                    }
-                }, handleStream, handleUserMediaError);
-                return;
-            }
+        const matching = sources.filter(src => src.name === SECRET_KEY);
+        if (matching.length === 0) {
+            console.error('unable to find matching source');
+            return;
         }
+        const source = matching[0];
+        console.log('found matching source ', source.id);
+        document.title = origTitle;
+        navigator.webkitGetUserMedia({
+            audio: false,
+            video: {
+                mandatory: {
+                    chromeMediaSource: 'desktop',
+                    chromeMediaSourceId: source.id,
+                    minWidth: 800,
+                    maxWidth: 1280,
+                    minHeight: 600,
+                    maxHeight: 720
+                }
+            }
+        }, handleStream, handleUserMediaError);
     });
 }
 exports.startRecording = startRecording;

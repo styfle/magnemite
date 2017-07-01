@@ -1,8 +1,15 @@
-declare var MediaRecorder: any;
-
-interface MediaStream {
-
+declare class MediaRecorder {
+    constructor(m: MediaStream);
+    start(): void;
+    stop(): void;
+    ondataavailable(e: BlobEvent): void;
 }
+
+interface BlobEvent {
+    data: Blob;
+}
+
+//interface MediaStream { }
 
 interface Navigator {
     webkitGetUserMedia(
