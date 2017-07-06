@@ -59,12 +59,9 @@ function handleStream(stream: MediaStream) {
     console.log('handleStream', seqNumber);
     recorder = new MediaRecorder(stream);
     blobs = [];
-    recorder.ondataavailable = (event) => {
-        blobs.push(event.data);
-    };
-    recorder.onerror = (err) => {
-        console.error('recorder error ', err);
-    };
+    recorder.ondataavailable = handleRecorderData;
+    recorder.onerror = handleRecorderError;
+    recorder.onstop = handleRecorderStop;
     recorder.start();
 }
 
@@ -75,6 +72,13 @@ export function stopRecording() {
         return;
     }
     recorder.stop();
+}
+
+function handleUserMediaError(e: Error) {
+    console.error('handleUserMediaError', e);
+}
+
+function handleRecorderStop() {
     toArrayBuffer(new Blob(blobs, {type: 'video/webm'}), (ab) => {
         const buffer = toBuffer(ab);
         const file = `./videos/video-nav-${seqNumber}.webm`;
@@ -88,8 +92,13 @@ export function stopRecording() {
     });
 }
 
-function handleUserMediaError(e: Error) {
-    console.error('handleUserMediaError', e);
+function handleRecorderData(event: BlobEvent) {
+    console.log('event data recv');
+    blobs.push(event.data);
+}
+
+function handleRecorderError(e: Error) {
+    console.error('recorder error ', e);
 }
 
 function toArrayBuffer(blob: Blob, cb: (ab: ArrayBuffer) => void) {
