@@ -12,7 +12,7 @@ var seqNumber: number;
 
 export function deleteExistingVideos() {
     const dir = './videos/';
-    readdir('./videos', (err, files) => {
+    readdir(dir, (err, files) => {
         if (err) console.error(err);
         files.filter(f => f.endsWith('.webm')).forEach(f => unlink(dir + f, (err) => {
             if (err) {console.error(err); }
