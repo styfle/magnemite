@@ -8,7 +8,7 @@ var blobs = [];
 var seqNumber;
 function deleteExistingVideos() {
     const dir = './videos/';
-    fs_1.readdir('./videos', (err, files) => {
+    fs_1.readdir(dir, (err, files) => {
         if (err)
             console.error(err);
         files.filter(f => f.endsWith('.webm')).forEach(f => fs_1.unlink(dir + f, (err) => {
