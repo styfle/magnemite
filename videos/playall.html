@@ -22,7 +22,8 @@
 	<h1>Play Again?</h1>
 	<video controls width="800" height="600"></video>
     <script>
-        let seqNumber = 0;
+		let seqNumber = 0;
+		let errorCount = 0;
         const video = document.querySelector('video');
         const again = document.querySelector('h1');
 
@@ -40,8 +41,13 @@
 		}
 
 		function allDone() {
-			again.style.display = 'block';
-			video.style.display = 'none';
+			errorCount++;
+			if (errorCount > 3) {
+				again.style.display = 'block';
+				video.style.display = 'none';
+			} else {
+				playNextVideo();
+			}
 		}
 
 		again.addEventListener('click', playFirstVideo);
