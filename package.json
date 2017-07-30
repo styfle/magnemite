@@ -1,6 +1,6 @@
 {
   "name": "magnemite",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A screen recorder for websites powered by electron",
   "productName": "Magnemite",
   "main": "src/main.js",
