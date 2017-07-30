@@ -75,9 +75,9 @@ function handleUserMediaError(e) {
 }
 function handleRecorderStop() {
     toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), (ab) => {
-        const buffer = toBuffer(ab);
+        const data = toTypedArray(ab);
         const file = `./videos/video-nav-${seqNumber}.webm`;
-        fs_1.writeFile(file, buffer, err => {
+        fs_1.writeFile(file, data, err => {
             if (err) {
                 console.error('Failed to save video ' + err);
             }
@@ -96,14 +96,17 @@ function handleRecorderError(e) {
 }
 function toArrayBuffer(blob, cb) {
     let fileReader = new FileReader();
-    fileReader.onload = function () {
+    fileReader.onload = function (ev) {
         let arrayBuffer = this.result;
         cb(arrayBuffer);
     };
     fileReader.readAsArrayBuffer(blob);
 }
+function toTypedArray(ab) {
+    return new Uint8Array(ab);
+}
 function toBuffer(ab) {
-    let buffer = new Buffer(ab.byteLength);
+    let buffer = Buffer.alloc(ab.byteLength);
     let arr = new Uint8Array(ab);
     for (let i = 0; i < arr.byteLength; i++) {
         buffer[i] = arr[i];

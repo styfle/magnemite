@@ -80,9 +80,9 @@ function handleUserMediaError(e: Error) {
 
 function handleRecorderStop() {
     toArrayBuffer(new Blob(blobs, {type: 'video/webm'}), (ab) => {
-        const buffer = toBuffer(ab);
+        const data = toTypedArray(ab);
         const file = `./videos/video-nav-${seqNumber}.webm`;
-        writeFile(file, buffer, err => {
+        writeFile(file, data, err => {
             if (err) {
                 console.error('Failed to save video ' + err);
             } else {
@@ -103,16 +103,20 @@ function handleRecorderError(e: Error) {
 
 function toArrayBuffer(blob: Blob, cb: (ab: ArrayBuffer) => void) {
     let fileReader = new FileReader();
-    fileReader.onload = function() {
+    fileReader.onload = function(ev) {
         let arrayBuffer: ArrayBuffer = this.result;
         cb(arrayBuffer);
     };
     fileReader.readAsArrayBuffer(blob);
 }
 
+function toTypedArray(ab: ArrayBuffer) {
+    return new Uint8Array(ab);
+}
+
 function toBuffer(ab: ArrayBuffer) {
-    let buffer = new Buffer(ab.byteLength);
-    let arr = new Uint8Array(ab);
+    let buffer = Buffer.alloc(ab.byteLength);
+    let arr = new Uint8Array(ab); // TODO: can we just return Uint8Array?
     for (let i = 0; i < arr.byteLength; i++) {
         buffer[i] = arr[i];
     }
