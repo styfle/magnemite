@@ -35,12 +35,14 @@ Finally, all videos can be viewed by opening the `playall.html` file with your b
 
 ## TODO
 
-- How can electron be packaged as a single binary (or installable app)?
-- How can the recorded video files be sent back to a server for a support team or development team?
+See [Issues](https://github.com/styfle/magnemite/issues) for work that is still in progress.
 
 ## Contributing
 
+Want to help? Start by cloning this repo, and then install, build, and run!
+
 ```sh
+git clone https://github.com/styfle/magnemite.git
 npm install
 npm run build
 npm start
