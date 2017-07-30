@@ -3,18 +3,20 @@
 // All of the Node.js APIs are available in this process.
 // In the renderer process.
 import {desktopCapturer} from 'electron';
-import {writeFile, readdir, unlink} from 'fs';
-const SECRET_KEY = 'Magnemite';
+import {writeFile, readdir, unlink, createWriteStream} from 'fs';
+const tar = require('tar');
 
+const SECRET_KEY = 'Magnemite';
+const videoDirectory = './videos/';
 var recorder: MediaRecorder;
 var blobs: Blob[] = [];
 var seqNumber: number;
+var done: Function | null;
 
 export function deleteExistingVideos() {
-    const dir = './videos/';
-    readdir(dir, (err, files) => {
+    readdir(videoDirectory, (err, files) => {
         if (err) console.error(err);
-        files.filter(f => f.endsWith('.webm')).forEach(f => unlink(dir + f, (err) => {
+        files.filter(f => f.endsWith('.webm')).forEach(f => unlink(videoDirectory + f, (err) => {
             if (err) {console.error(err); }
         }));
     });
@@ -22,6 +24,7 @@ export function deleteExistingVideos() {
 
 export function startRecording(num: number) {
     seqNumber = num;
+    done = null;
     console.log('startRecording', seqNumber);
     const origTitle = document.title;
     document.title = SECRET_KEY;
@@ -74,6 +77,12 @@ export function stopRecording() {
     recorder.stop();
 }
 
+export function doneRecording(callback: () => void) {
+    console.log('doneRecording');
+    done = callback;
+    stopRecording();
+}
+
 function handleUserMediaError(e: Error) {
     console.error('handleUserMediaError', e);
 }
@@ -81,12 +90,20 @@ function handleUserMediaError(e: Error) {
 function handleRecorderStop() {
     toArrayBuffer(new Blob(blobs, {type: 'video/webm'}), (ab) => {
         const data = toTypedArray(ab);
-        const file = `./videos/video-nav-${seqNumber}.webm`;
+        const file = `${videoDirectory}video-nav-${seqNumber}.webm`;
+        const today = new Date().toISOString().split('T')[0];
+        const fileCompressed = `./bug-report-${today}.tgz`;
         writeFile(file, data, err => {
             if (err) {
                 console.error('Failed to save video ' + err);
             } else {
                 console.log('Saved video: ' + file);
+            }
+
+            if (done) {
+                tar.create({ gzip: true, file: fileCompressed }, [videoDirectory]);
+                console.log('Saved compressed file: ' + fileCompressed);
+                done();
             }
         });
     });

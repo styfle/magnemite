@@ -2,16 +2,18 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const fs_1 = require("fs");
+const tar = require('tar');
 const SECRET_KEY = 'Magnemite';
+const videoDirectory = './videos/';
 var recorder;
 var blobs = [];
 var seqNumber;
+var done;
 function deleteExistingVideos() {
-    const dir = './videos/';
-    fs_1.readdir(dir, (err, files) => {
+    fs_1.readdir(videoDirectory, (err, files) => {
         if (err)
             console.error(err);
-        files.filter(f => f.endsWith('.webm')).forEach(f => fs_1.unlink(dir + f, (err) => {
+        files.filter(f => f.endsWith('.webm')).forEach(f => fs_1.unlink(videoDirectory + f, (err) => {
             if (err) {
                 console.error(err);
             }
@@ -21,6 +23,7 @@ function deleteExistingVideos() {
 exports.deleteExistingVideos = deleteExistingVideos;
 function startRecording(num) {
     seqNumber = num;
+    done = null;
     console.log('startRecording', seqNumber);
     const origTitle = document.title;
     document.title = SECRET_KEY;
@@ -70,19 +73,32 @@ function stopRecording() {
     recorder.stop();
 }
 exports.stopRecording = stopRecording;
+function doneRecording(callback) {
+    console.log('doneRecording');
+    done = callback;
+    stopRecording();
+}
+exports.doneRecording = doneRecording;
 function handleUserMediaError(e) {
     console.error('handleUserMediaError', e);
 }
 function handleRecorderStop() {
     toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), (ab) => {
         const data = toTypedArray(ab);
-        const file = `./videos/video-nav-${seqNumber}.webm`;
+        const file = `${videoDirectory}video-nav-${seqNumber}.webm`;
+        const today = new Date().toISOString().split('T')[0];
+        const fileCompressed = `./bug-report-${today}.tgz`;
         fs_1.writeFile(file, data, err => {
             if (err) {
                 console.error('Failed to save video ' + err);
             }
             else {
                 console.log('Saved video: ' + file);
+            }
+            if (done) {
+                tar.create({ gzip: true, file: fileCompressed }, [videoDirectory]);
+                console.log('Saved compressed file: ' + fileCompressed);
+                done();
             }
         });
     });

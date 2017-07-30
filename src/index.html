@@ -44,7 +44,7 @@
             });
 
             webview.addEventListener('will-navigate', (e) => {
-                renderer.stopRecording(num);
+                renderer.stopRecording();
             });
             webview.addEventListener('did-navigate', (e) => {
                 num++;
@@ -52,8 +52,9 @@
             });
 
             issue.addEventListener('click', () => {
-                renderer.stopRecording(num);
-                alert('Recording saved to disk!');
+                renderer.doneRecording(() => {
+                    alert('Recording saved to disk!');
+                });
             });
 
 
