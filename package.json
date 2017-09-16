@@ -2,11 +2,12 @@
   "name": "magnemite",
   "version": "0.2.0",
   "description": "A screen recorder for websites powered by electron",
-  "productName": "Magnemite",
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
-    "build": "tsc"
+    "build": "tsc",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "repository": {
     "type": "git",
@@ -23,9 +24,15 @@
   "homepage": "https://github.com/styfle/magnemite#readme",
   "devDependencies": {
     "electron": "^1.6.11",
+    "electron-builder": "^19.27.7",
     "typescript": "^2.4.1"
   },
   "dependencies": {
     "tar": "^3.1.7"
+  },
+  "productName": "Magnemite",
+  "build": {
+    "appId": "com.ceriously.magnemite",
+    "publish": null
   }
 }
