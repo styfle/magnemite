@@ -12,7 +12,10 @@
     "type": "git",
     "url": "git+https://github.com/styfle/magnemite.git"
   },
-  "author": "styfle",
+  "author": {
+    "name": "styfle",
+    "url": "https://www.ceriously.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/styfle/magnemite/issues"
