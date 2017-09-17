@@ -1,6 +1,9 @@
 # Magnemite
 
 ![img](img/magnemite.gif)
+[![Dependency Status](https://david-dm.org/styfle/magnemite.svg)](https://david-dm.org/styfle/magnemite)
+[![devDependency Status](https://david-dm.org/styfle/magnemite/dev-status.svg)](https://david-dm.org/styfle/magnemite#info=devDependencies)
+[![Build Status](https://travis-ci.org/styfle/magnemite.svg?branch=master)](https://travis-ci.org/styfle/magnemite)
 
 Magnemite is a screen recorder for websites, built with [Electron](https://electron.atom.io).
 
