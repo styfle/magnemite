@@ -23,12 +23,12 @@
   },
   "homepage": "https://github.com/styfle/magnemite#readme",
   "devDependencies": {
-    "electron": "^1.6.11",
+    "electron": "1.7.6",
     "electron-builder": "^19.27.7",
-    "typescript": "^2.4.1"
+    "typescript": "^2.5.2"
   },
   "dependencies": {
-    "tar": "^3.1.7"
+    "tar": "^4.0.1"
   },
   "productName": "Magnemite",
   "build": {
