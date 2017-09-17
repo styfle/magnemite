@@ -4,7 +4,7 @@
 // In the renderer process.
 import {desktopCapturer} from 'electron';
 import {writeFile, readdir, unlink, createWriteStream} from 'fs';
-const tar = require('tar');
+import { create } from 'tar';
 
 const SECRET_KEY = 'Magnemite';
 const videoDirectory = './videos/';
@@ -88,7 +88,7 @@ function handleUserMediaError(e: Error) {
 }
 
 function handleRecorderStop() {
-    toArrayBuffer(new Blob(blobs, {type: 'video/webm'}), (ab) => {
+    toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), (ab) => {
         const data = toTypedArray(ab);
         const file = `${videoDirectory}video-nav-${seqNumber}.webm`;
         const today = new Date().toISOString().split('T')[0];
@@ -101,7 +101,7 @@ function handleRecorderStop() {
             }
 
             if (done) {
-                tar.create({ gzip: true, file: fileCompressed }, [videoDirectory]);
+                create({ gzip: true, file: fileCompressed }, [videoDirectory]);
                 console.log('Saved compressed file: ' + fileCompressed);
                 done();
             }

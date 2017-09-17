@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/styfle/magnemite#readme",
   "devDependencies": {
+    "@types/tar": "^4.0.0",
     "electron": "1.7.6",
     "electron-builder": "^19.27.7",
     "typescript": "^2.5.2"

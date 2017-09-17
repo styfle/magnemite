@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const fs_1 = require("fs");
-const tar = require('tar');
+const tar_1 = require("tar");
 const SECRET_KEY = 'Magnemite';
 const videoDirectory = './videos/';
 var recorder;
@@ -96,7 +96,7 @@ function handleRecorderStop() {
                 console.log('Saved video: ' + file);
             }
             if (done) {
-                tar.create({ gzip: true, file: fileCompressed }, [videoDirectory]);
+                tar_1.create({ gzip: true, file: fileCompressed }, [videoDirectory]);
                 console.log('Saved compressed file: ' + fileCompressed);
                 done();
             }
