@@ -4,7 +4,9 @@ const electron_1 = require("electron");
 const fs_1 = require("fs");
 const path_1 = require("path");
 const tar_1 = require("tar");
+const net_1 = require("net");
 const temp = require('temp');
+const server_config_1 = require("./server-config");
 const SECRET_KEY = 'Magnemite';
 var videoDirectory = './videos/';
 var recorder;
@@ -93,11 +95,21 @@ function handleRecorderStop() {
                 console.log('Saved video: ' + file);
             }
             if (done) {
-                const today = new Date().toISOString().split('T')[0];
-                const fileCompressed = path_1.join(videoDirectory, `./bug-report-${today}.tgz`);
-                tar_1.create({ gzip: true, file: fileCompressed }, [videoDirectory]);
-                console.log('Saved compressed file: ' + fileCompressed);
-                done();
+                const complete = done;
+                const stream = tar_1.create({ gzip: true, portable: true }, [videoDirectory]);
+                const socket = net_1.createConnection({ host: server_config_1.SERVER_HOST, port: server_config_1.SERVER_PORT });
+                stream.on('data', (data) => {
+                    console.log('data');
+                    socket.write(data);
+                });
+                stream.on('end', () => {
+                    console.log('end');
+                    socket.end();
+                });
+                socket.on('close', () => {
+                    console.log('close');
+                    complete();
+                });
             }
         });
     });

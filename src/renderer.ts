@@ -6,7 +6,9 @@ import { desktopCapturer } from 'electron';
 import { writeFile } from 'fs';
 import { join } from 'path'
 import { create } from 'tar';
+import { createConnection } from 'net';
 const temp = require('temp');
+import { SERVER_HOST, SERVER_PORT } from './server-config';
 
 const SECRET_KEY = 'Magnemite';
 var videoDirectory = './videos/';
@@ -101,11 +103,24 @@ function handleRecorderStop() {
             }
 
             if (done) {
-                const today = new Date().toISOString().split('T')[0];
-                const fileCompressed = join(videoDirectory, `./bug-report-${today}.tgz`);
-                create({ gzip: true, file: fileCompressed }, [videoDirectory]);
-                console.log('Saved compressed file: ' + fileCompressed);
-                done();
+                const complete = done;
+                const stream = create({ gzip: true, portable: true }, [videoDirectory]);
+                const socket = createConnection({ host: SERVER_HOST, port: SERVER_PORT });
+
+                stream.on('data', (data: Buffer) => {
+                    console.log('data');
+                    socket.write(data);
+                });
+
+                stream.on('end', () => {
+                    console.log('end');
+                    socket.end();
+                });
+
+                socket.on('close', () => {
+                    console.log('close');
+                    complete();
+                });
             }
         });
     });
