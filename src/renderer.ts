@@ -2,23 +2,24 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 // In the renderer process.
-import {desktopCapturer} from 'electron';
-import {writeFile, readdir, unlink, createWriteStream} from 'fs';
+import { desktopCapturer } from 'electron';
+import { writeFile } from 'fs';
+import { join } from 'path'
 import { create } from 'tar';
+const temp = require('temp');
 
 const SECRET_KEY = 'Magnemite';
-const videoDirectory = './videos/';
+var videoDirectory = './videos/';
 var recorder: MediaRecorder;
 var blobs: Blob[] = [];
 var seqNumber: number;
 var done: Function | null;
 
-export function deleteExistingVideos() {
-    readdir(videoDirectory, (err, files) => {
-        if (err) console.error(err);
-        files.filter(f => f.endsWith('.webm')).forEach(f => unlink(videoDirectory + f, (err) => {
-            if (err) {console.error(err); }
-        }));
+export function createTemp() {
+    temp.mkdir('com.ceriously.magnemite', (err: Error, dirPath: string) => {
+        if (err) throw err;
+        temp.track();
+        videoDirectory = dirPath;
     });
 }
 
@@ -90,9 +91,8 @@ function handleUserMediaError(e: Error) {
 function handleRecorderStop() {
     toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), (ab) => {
         const data = toTypedArray(ab);
-        const file = `${videoDirectory}video-nav-${seqNumber}.webm`;
-        const today = new Date().toISOString().split('T')[0];
-        const fileCompressed = `./bug-report-${today}.tgz`;
+        const file = join(videoDirectory, `video-nav-${seqNumber}.webm`);
+        
         writeFile(file, data, err => {
             if (err) {
                 console.error('Failed to save video ' + err);
@@ -101,6 +101,8 @@ function handleRecorderStop() {
             }
 
             if (done) {
+                const today = new Date().toISOString().split('T')[0];
+                const fileCompressed = join(videoDirectory, `./bug-report-${today}.tgz`);
                 create({ gzip: true, file: fileCompressed }, [videoDirectory]);
                 console.log('Saved compressed file: ' + fileCompressed);
                 done();
