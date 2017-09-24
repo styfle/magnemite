@@ -1,142 +1,47 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const electron_1 = require("electron");
-const fs_1 = require("fs");
-const path_1 = require("path");
-const tar_1 = require("tar");
-const net_1 = require("net");
-const temp = require('temp');
-const server_config_1 = require("./server-config");
-const SECRET_KEY = 'Magnemite';
-var videoDirectory = './videos/';
-var recorder;
-var blobs = [];
-var seqNumber;
-var done;
-function createTemp() {
-    temp.mkdir('com.ceriously.magnemite', (err, dirPath) => {
-        if (err)
-            throw err;
-        temp.track();
-        videoDirectory = dirPath;
+const recorder_1 = require("./recorder");
+const config_1 = require("./config");
+const temp = recorder_1.createTemp()
+    .then(() => init())
+    .catch(err => alert(err));
+function init() {
+    const webview = document.getElementById('webview');
+    const loading = document.getElementById('loading');
+    const issue = document.getElementById('issue');
+    const back = document.getElementById('back');
+    const forward = document.getElementById('forward');
+    var num = 0;
+    webview.addEventListener('did-start-loading', () => {
+        loading.style.visibility = 'visible';
     });
-}
-exports.createTemp = createTemp;
-function startRecording(num) {
-    seqNumber = num;
-    done = null;
-    console.log('startRecording', seqNumber);
-    const origTitle = document.title;
-    document.title = SECRET_KEY;
-    electron_1.desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
-        if (error)
-            throw error;
-        console.log('sources', sources);
-        const matching = sources.filter(src => src.name === SECRET_KEY);
-        if (matching.length === 0) {
-            console.error('unable to find matching source');
-            return;
-        }
-        const source = matching[0];
-        console.log('found matching source ', source.id);
-        document.title = origTitle;
-        navigator.webkitGetUserMedia({
-            audio: false,
-            video: {
-                mandatory: {
-                    chromeMediaSource: 'desktop',
-                    chromeMediaSourceId: source.id,
-                    minWidth: 800,
-                    maxWidth: 1280,
-                    minHeight: 600,
-                    maxHeight: 720
-                }
-            }
-        }, handleStream, handleUserMediaError);
+    webview.addEventListener('did-stop-loading', () => {
+        loading.style.visibility = 'hidden';
     });
-}
-exports.startRecording = startRecording;
-function handleStream(stream) {
-    console.log('handleStream', seqNumber);
-    recorder = new MediaRecorder(stream);
-    blobs = [];
-    recorder.ondataavailable = handleRecorderData;
-    recorder.onerror = handleRecorderError;
-    recorder.onstop = handleRecorderStop;
-    recorder.start();
-}
-function stopRecording() {
-    console.log('stopRecording', seqNumber);
-    if (!recorder) {
-        console.log('nothing to stop', seqNumber);
-        return;
-    }
-    recorder.stop();
-}
-exports.stopRecording = stopRecording;
-function doneRecording(callback) {
-    console.log('doneRecording');
-    done = callback;
-    stopRecording();
-}
-exports.doneRecording = doneRecording;
-function handleUserMediaError(e) {
-    console.error('handleUserMediaError', e);
-}
-function handleRecorderStop() {
-    toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), (ab) => {
-        const data = toTypedArray(ab);
-        const file = path_1.join(videoDirectory, `video-nav-${seqNumber}.webm`);
-        fs_1.writeFile(file, data, err => {
-            if (err) {
-                console.error('Failed to save video ' + err);
-            }
-            else {
-                console.log('Saved video: ' + file);
-            }
-            if (done) {
-                const complete = done;
-                const stream = tar_1.create({ gzip: true, portable: true }, [videoDirectory]);
-                const socket = net_1.createConnection({ host: server_config_1.SERVER_HOST, port: server_config_1.SERVER_PORT });
-                stream.on('data', (data) => {
-                    console.log('data');
-                    socket.write(data);
-                });
-                stream.on('end', () => {
-                    console.log('end');
-                    socket.end();
-                });
-                socket.on('close', () => {
-                    console.log('close');
-                    complete();
-                });
-            }
+    back.addEventListener('click', () => {
+        webview.goBack();
+    });
+    forward.addEventListener('click', () => {
+        webview.goForward();
+    });
+    webview.addEventListener('will-navigate', (e) => {
+        recorder_1.stopRecording();
+    });
+    webview.addEventListener('did-navigate', (e) => {
+        num++;
+        recorder_1.startRecording(num);
+    });
+    issue.addEventListener('click', () => {
+        recorder_1.doneRecording(() => {
+            alert('Recording saved to disk!');
         });
     });
-}
-function handleRecorderData(event) {
-    console.log('event data recv');
-    blobs.push(event.data);
-}
-function handleRecorderError(e) {
-    console.error('recorder error ', e);
-}
-function toArrayBuffer(blob, cb) {
-    let fileReader = new FileReader();
-    fileReader.onload = function (ev) {
-        let arrayBuffer = this.result;
-        cb(arrayBuffer);
-    };
-    fileReader.readAsArrayBuffer(blob);
-}
-function toTypedArray(ab) {
-    return new Uint8Array(ab);
-}
-function toBuffer(ab) {
-    let buffer = Buffer.alloc(ab.byteLength);
-    let arr = new Uint8Array(ab);
-    for (let i = 0; i < arr.byteLength; i++) {
-        buffer[i] = arr[i];
-    }
-    return buffer;
+    webview.addEventListener('dom-ready', () => {
+        if (process.env['NODE_ENV'] === 'development') {
+            webview.openDevTools();
+        }
+        back.disabled = !webview.canGoBack();
+        forward.disabled = !webview.canGoForward();
+    });
+    webview.src = config_1.WEBVIEW_START_PAGE;
 }

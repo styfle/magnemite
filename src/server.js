@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const net_1 = require("net");
 const fs_1 = require("fs");
-const server_config_1 = require("./server-config");
+const config_1 = require("./config");
 const server = net_1.createServer(socket => {
     const invalidFileName = new RegExp('[:/]', 'g');
     const now = new Date().toISOString().replace(invalidFileName, '_');
@@ -18,5 +18,5 @@ const server = net_1.createServer(socket => {
     socket.on('close', () => {
         console.log('close');
     });
-}).listen(server_config_1.SERVER_PORT, server_config_1.SERVER_HOST);
-console.log(`Listening on ${server_config_1.SERVER_HOST}:${server_config_1.SERVER_PORT}`);
+}).listen(config_1.SERVER_PORT, config_1.SERVER_HOST);
+console.log(`Listening on ${config_1.SERVER_HOST}:${config_1.SERVER_PORT}`);

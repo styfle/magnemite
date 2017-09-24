@@ -1,4 +1,5 @@
 node_modules
 videos/*.webm
+videos/*.tgz
 bug-report*
 dist

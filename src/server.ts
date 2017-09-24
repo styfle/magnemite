@@ -1,6 +1,6 @@
 import { createServer } from 'net';
 import { createWriteStream } from 'fs';
-import { SERVER_HOST, SERVER_PORT } from './server-config';
+import { SERVER_HOST, SERVER_PORT } from './config';
 
 const server = createServer(socket => {
 
