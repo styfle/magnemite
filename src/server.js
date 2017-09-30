@@ -6,17 +6,17 @@ const config_1 = require("./config");
 const server = net_1.createServer(socket => {
     const invalidFileName = new RegExp('[:/]', 'g');
     const now = new Date().toISOString().replace(invalidFileName, '_');
-    const stream = fs_1.createWriteStream(`./videos/vid-${now}.tgz`);
+    const stream = fs_1.createWriteStream(`./recording-${now}.tgz`);
     socket.on('data', data => {
-        console.log('data');
+        console.log(now, 'data');
         stream.write(data);
     });
     socket.on('end', () => {
-        console.log('end');
+        console.log(now, 'end');
         stream.end();
     });
     socket.on('close', () => {
-        console.log('close');
+        console.log(now, 'close');
     });
 }).listen(config_1.SERVER_PORT, config_1.SERVER_HOST);
 console.log(`Listening on ${config_1.SERVER_HOST}:${config_1.SERVER_PORT}`);

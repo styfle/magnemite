@@ -1,12 +1,21 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
-const fs_1 = require("fs");
 const path_1 = require("path");
 const tar_1 = require("tar");
 const net_1 = require("net");
 const temp = require('temp');
 const config_1 = require("./config");
+const converter_1 = require("./converter");
+const file_1 = require("./file");
 const SECRET_KEY = 'Magnemite';
 var videoDirectory = '/tmp/magnemite';
 var recorder;
@@ -90,34 +99,30 @@ function handleUserMediaError(e) {
     console.error('handleUserMediaError', e);
 }
 function handleRecorderStop() {
-    toArrayBuffer(new Blob(blobs, { type: 'video/webm' }), (ab) => {
-        const data = toTypedArray(ab);
+    return __awaiter(this, void 0, void 0, function* () {
+        const blob = new Blob(blobs, { type: 'video/webm' });
+        const ab = yield converter_1.toArrayBuffer(blob);
+        const bytes = converter_1.toTypedArray(ab);
         const file = path_1.join(videoDirectory, `video-nav-${seqNumber}.webm`);
-        fs_1.writeFile(file, data, err => {
-            if (err) {
-                console.error('Failed to save video ' + err);
-            }
-            else {
-                console.log('Saved video: ' + file);
-            }
-            if (done) {
-                const complete = done;
-                const stream = tar_1.create({ gzip: true, portable: true }, [videoDirectory]);
-                const socket = net_1.createConnection({ host: config_1.SERVER_HOST, port: config_1.SERVER_PORT });
-                stream.on('data', (data) => {
-                    console.log('data');
-                    socket.write(data);
-                });
-                stream.on('end', () => {
-                    console.log('end');
-                    socket.end();
-                });
-                socket.on('close', () => {
-                    console.log('close');
-                    complete();
-                });
-            }
-        });
+        const path = yield file_1.writeFileAsync(file, bytes);
+        console.log('Saved video: ' + path);
+        if (done) {
+            const complete = done;
+            const stream = tar_1.create({ gzip: true, portable: true }, [videoDirectory]);
+            const socket = net_1.createConnection({ host: config_1.SERVER_HOST, port: config_1.SERVER_PORT });
+            stream.on('data', (data) => {
+                console.log('data');
+                socket.write(data);
+            });
+            stream.on('end', () => {
+                console.log('end');
+                socket.end();
+            });
+            socket.on('close', () => {
+                console.log('close');
+                complete();
+            });
+        }
     });
 }
 function handleRecorderData(event) {
@@ -126,23 +131,4 @@ function handleRecorderData(event) {
 }
 function handleRecorderError(e) {
     console.error('recorder error ', e);
-}
-function toArrayBuffer(blob, cb) {
-    let fileReader = new FileReader();
-    fileReader.onload = function (ev) {
-        let arrayBuffer = this.result;
-        cb(arrayBuffer);
-    };
-    fileReader.readAsArrayBuffer(blob);
-}
-function toTypedArray(ab) {
-    return new Uint8Array(ab);
-}
-function toBuffer(ab) {
-    let buffer = Buffer.alloc(ab.byteLength);
-    let arr = new Uint8Array(ab);
-    for (let i = 0; i < arr.byteLength; i++) {
-        buffer[i] = arr[i];
-    }
-    return buffer;
 }

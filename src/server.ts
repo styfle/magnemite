@@ -6,20 +6,20 @@ const server = createServer(socket => {
 
     const invalidFileName = new RegExp('[:/]', 'g');
     const now = new Date().toISOString().replace(invalidFileName , '_');
-    const stream = createWriteStream(`./videos/vid-${now}.tgz`);
+    const stream = createWriteStream(`./recording-${now}.tgz`);
     
     socket.on('data', data => {
-        console.log('data');
+        console.log(now, 'data');
         stream.write(data);
     });
 
     socket.on('end', () => {
-        console.log('end');
+        console.log(now, 'end');
         stream.end();
     });
 
     socket.on('close', () => {
-        console.log('close');
+        console.log(now, 'close');
     });
 
 }).listen(SERVER_PORT, SERVER_HOST);
