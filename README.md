@@ -41,15 +41,33 @@ Install dependencies
 npm install
 ```
 
-Edit the `src` attribute in the `<webview src="">` located in the `index.html` file if you wish to change the startup page. Most likely, you will want this to be your web app before distributing to the end user.
+Update the config file
 
-Once you are ready, you can start the app with `npm start`.
+Edit `src/config.ts` with a startup page (your website) and the server endpoint which is where you will deploy `src/server.js`, a standalone script that will save receive the bug report.
 
-As the user navigates to different pages, screen capture is recording videos.
+Build the code
 
-The user can click the "Report Bug" button to end recording.
+```sh
+npm run build
+```
 
-Finally, all videos can be viewed by opening the `playall.html` file with your browser.
+Deploy the server file
+
+```sh
+node src/server.js
+```
+
+Start magnemite
+
+```sh
+npm start
+```
+
+Navigate to different pages, the screen is capture the whole time
+
+Click the "Report Bug" button to end the recording and auto-upload to the server
+
+View the `.tgz` file on the server, extract the tarball, and open `playall.html` with your browser
 
 ## TODO
 
