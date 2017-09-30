@@ -5,7 +5,12 @@ function toArrayBuffer(blob) {
         let fileReader = new FileReader();
         fileReader.onload = function (ev) {
             let arrayBuffer = this.result;
-            resolve(arrayBuffer);
+            if (arrayBuffer) {
+                resolve(arrayBuffer);
+            }
+            else {
+                reject(new Error('Failed to convert Blob to ArrayBuffer'));
+            }
         };
         fileReader.readAsArrayBuffer(blob);
     });

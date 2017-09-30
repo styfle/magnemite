@@ -1,31 +1,21 @@
 import { desktopCapturer } from 'electron';
 import { join } from 'path'
-import { create } from 'tar';
-import { createConnection } from 'net';
-const temp = require('temp');
+import { uploadToServer } from './upload';
 import { SERVER_HOST, SERVER_PORT } from './config';
 import { toArrayBuffer, toTypedArray } from './converter'
-import { writeFileAsync } from './file';
+import { writeFileAsync, copyFileAsync } from './file';
 
 const SECRET_KEY = 'Magnemite';
+const playall = 'playall.html';
 var videoDirectory = '/tmp/magnemite';
 var recorder: MediaRecorder;
 var blobs: Blob[] = [];
 var seqNumber: number;
 var done: Function | null;
 
-export function createTemp() {
-    return new Promise<string>((resolve, reject) => {
-        temp.mkdir('com.ceriously.magnemite', (err: Error, dirPath: string) => {
-            if (err) {
-                reject(err);
-            } else {
-                temp.track();
-                videoDirectory = dirPath;
-                resolve(videoDirectory);
-            }
-        });
-    });
+export function initRecorder(dir: string) {
+    videoDirectory = dir;
+    return copyFileAsync(join('./src', playall), join(videoDirectory, playall));
 }
 
 export function startRecording(num: number) {
@@ -102,24 +92,8 @@ async function handleRecorderStop() {
     console.log('Saved video: ' + path);
 
     if (done) {
-        const complete = done;
-        const stream = create({ gzip: true, portable: true }, [videoDirectory]);
-        const socket = createConnection({ host: SERVER_HOST, port: SERVER_PORT });
-
-        stream.on('data', (data: Buffer) => {
-            console.log('data');
-            socket.write(data);
-        });
-
-        stream.on('end', () => {
-            console.log('end');
-            socket.end();
-        });
-
-        socket.on('close', () => {
-            console.log('close');
-            complete();
-        });
+        await uploadToServer(videoDirectory, SERVER_HOST, SERVER_PORT);
+        done();
     }
 }
 

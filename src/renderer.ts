@@ -1,11 +1,11 @@
-import { createTemp, startRecording, stopRecording, doneRecording } from './recorder';
+import { createTemp } from './temporary';
+import { initRecorder, startRecording, stopRecording, doneRecording } from './recorder';
 import { WEBVIEW_START_PAGE } from './config';
 
-const temp = createTemp()
-    .then(() => init())
-    .catch(err => alert(err));
 
-function init() {
+async function init() {
+    const dir = await createTemp();
+    const rec = await initRecorder(dir);
     const webview = document.getElementById('webview') as Electron.WebviewTag;
     const loading = document.getElementById('loading') as HTMLElement;
     const issue = document.getElementById('issue') as HTMLElement;
@@ -39,7 +39,7 @@ function init() {
 
     issue.addEventListener('click', () => {
         doneRecording(() => {
-            alert('Recording saved to disk!');
+            alert('Your bug report was submitted!');
         });
     });
 
@@ -53,3 +53,5 @@ function init() {
 
     webview.src = WEBVIEW_START_PAGE;
 }
+
+init();

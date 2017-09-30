@@ -12,3 +12,21 @@ function writeFileAsync(path, data) {
     });
 }
 exports.writeFileAsync = writeFileAsync;
+function copyFileAsync(src, dst) {
+    return new Promise((resolve, reject) => {
+        fs_1.readFile(src, (err, data) => {
+            if (err || !data) {
+                reject(err);
+            }
+            else {
+                fs_1.writeFile(dst, data, err2 => {
+                    if (err2)
+                        reject(err2);
+                    else
+                        resolve(dst);
+                });
+            }
+        });
+    });
+}
+exports.copyFileAsync = copyFileAsync;

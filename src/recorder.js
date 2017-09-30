@@ -10,33 +10,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const path_1 = require("path");
-const tar_1 = require("tar");
-const net_1 = require("net");
-const temp = require('temp');
+const upload_1 = require("./upload");
 const config_1 = require("./config");
 const converter_1 = require("./converter");
 const file_1 = require("./file");
 const SECRET_KEY = 'Magnemite';
+const playall = 'playall.html';
 var videoDirectory = '/tmp/magnemite';
 var recorder;
 var blobs = [];
 var seqNumber;
 var done;
-function createTemp() {
-    return new Promise((resolve, reject) => {
-        temp.mkdir('com.ceriously.magnemite', (err, dirPath) => {
-            if (err) {
-                reject(err);
-            }
-            else {
-                temp.track();
-                videoDirectory = dirPath;
-                resolve(videoDirectory);
-            }
-        });
-    });
+function initRecorder(dir) {
+    videoDirectory = dir;
+    return file_1.copyFileAsync(path_1.join('./src', playall), path_1.join(videoDirectory, playall));
 }
-exports.createTemp = createTemp;
+exports.initRecorder = initRecorder;
 function startRecording(num) {
     seqNumber = num;
     done = null;
@@ -107,21 +96,8 @@ function handleRecorderStop() {
         const path = yield file_1.writeFileAsync(file, bytes);
         console.log('Saved video: ' + path);
         if (done) {
-            const complete = done;
-            const stream = tar_1.create({ gzip: true, portable: true }, [videoDirectory]);
-            const socket = net_1.createConnection({ host: config_1.SERVER_HOST, port: config_1.SERVER_PORT });
-            stream.on('data', (data) => {
-                console.log('data');
-                socket.write(data);
-            });
-            stream.on('end', () => {
-                console.log('end');
-                socket.end();
-            });
-            socket.on('close', () => {
-                console.log('close');
-                complete();
-            });
+            yield upload_1.uploadToServer(videoDirectory, config_1.SERVER_HOST, config_1.SERVER_PORT);
+            done();
         }
     });
 }
