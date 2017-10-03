@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { captureStream } from './capturer';
-import { uploadToServer } from './upload';
+import { uploadToServer } from './uploader';
 import { SERVER_HOST, SERVER_PORT } from './config';
 import { toArrayBuffer, toTypedArray } from './converter'
 import { writeFileAsync, copyFileAsync } from './file';

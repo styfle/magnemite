@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const path_1 = require("path");
 const capturer_1 = require("./capturer");
-const upload_1 = require("./upload");
+const uploader_1 = require("./uploader");
 const config_1 = require("./config");
 const converter_1 = require("./converter");
 const file_1 = require("./file");
@@ -42,7 +42,7 @@ class Recorder {
                 if (this.done) {
                     const play = 'playall.html';
                     yield file_1.copyFileAsync(path_1.join('./src', play), path_1.join(this.baseDir, play));
-                    yield upload_1.uploadToServer(this.baseDir, config_1.SERVER_HOST, config_1.SERVER_PORT);
+                    yield uploader_1.uploadToServer(this.baseDir, config_1.SERVER_HOST, config_1.SERVER_PORT);
                     this.done();
                 }
             });
