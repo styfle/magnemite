@@ -1,7 +1,7 @@
 import * as proxyquire from 'proxyquire';
 import * as test from 'tape';
 
-test('uploadToServer', t => {
+test('uploadToServer', async t => {
     t.plan(9);
     const baseDir = '/fakefolder';
     const host = 'hostname';
@@ -42,7 +42,6 @@ test('uploadToServer', t => {
 
     const uploader = proxyquire('../src/uploader', { tar, net });
 
-    uploader.uploadToServer(baseDir, host, port)
-        .then((dir: string) => t.equal(dir, baseDir))
-        .catch((err: Error) => t.error(err));
+    const dir = await uploader.uploadToServer(baseDir, host, port)
+    t.equal(dir, baseDir);
 });

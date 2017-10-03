@@ -1,19 +1,17 @@
 import { desktopCapturer } from 'electron';
 
-const SECRET_KEY = 'magnemite_secret_key_to_find_window';
-
-export async function captureStream(document: Document) {
+export async function captureStream(document: Document, navigator: Navigator, secret: string) {
     const origTitle = document.title;
-    document.title = SECRET_KEY;
+    document.title = secret;
     const sources = await getSources();
     console.log('sources', sources);
-    const source = sources.find(src => src.name === SECRET_KEY);
+    const source = sources.find(src => src.name === secret);
     if (!source) {
         throw new Error('Unable to find matching source');
     }
     console.log('Found matching source with id: ', source.id);
     document.title = origTitle;
-    const stream = await getMedia(source.id);
+    const stream = await getMedia(navigator, source.id);
     return stream;
 }
 
@@ -26,7 +24,7 @@ function getSources() {
     });
 }
 
-function getMedia(sourceId: string) {
+function getMedia(navigator: Navigator, sourceId: string) {
     return new Promise<MediaStream>((resolve, reject) => {
         navigator.webkitGetUserMedia({
             audio: false,

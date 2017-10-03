@@ -8,20 +8,23 @@ import { writeFileAsync, copyFileAsync } from './file';
 export class Recorder {
     private baseDir: string;
     private document: Document;
+    private navigator: Navigator;
     private recorder: MediaRecorder;
     private id: number;
     private done: Function | null;
+    private readonly secret = 'magnemite_secret_key_to_find_window';
 
     constructor(dir: string, document: Document) {
         this.baseDir = dir;
         this.document = document;
+        this.navigator = navigator;
     }
 
     async startRecording(id: number) {
         this.id = id;
         this.done = null;
         console.log('startRecording', this.id);
-        const stream = await captureStream(this.document);
+        const stream = await captureStream(this.document, this.navigator, this.secret);
         const data: Blob[] = [];
         const r = new MediaRecorder(stream);
         this.recorder = r;

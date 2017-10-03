@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const proxyquire = require("proxyquire");
 const test = require("tape");
-test('uploadToServer', t => {
+test('uploadToServer', async (t) => {
     t.plan(9);
     const baseDir = '/fakefolder';
     const host = 'hostname';
@@ -37,7 +37,6 @@ test('uploadToServer', t => {
         }
     };
     const uploader = proxyquire('../src/uploader', { tar, net });
-    uploader.uploadToServer(baseDir, host, port)
-        .then((dir) => t.equal(dir, baseDir))
-        .catch((err) => t.error(err));
+    const dir = await uploader.uploadToServer(baseDir, host, port);
+    t.equal(dir, baseDir);
 });

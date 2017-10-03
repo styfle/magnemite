@@ -2,12 +2,11 @@ import * as test from 'tape';
 import { toArrayBuffer, toTypedArray } from '../src/converter';
 
 /*
-test('toArrayBuffer', t => {
+test('toArrayBuffer', async t => {
     const array = [1, 3, 3, 7];
     const blob = new Blob(array); // Does not exist!
-    toArrayBuffer(blob)
-        .then(ab => t.equal(ab, array))
-        .catch(err => t.fail(err.message));
+    const ab = await toArrayBuffer(blob);
+    t.equal(ab, array);
 });
 */
 
