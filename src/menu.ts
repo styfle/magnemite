@@ -1,4 +1,4 @@
-import {Menu} from 'electron';
+import { Menu } from 'electron';
 
 export function setMenu(win: Electron.BrowserWindow, appname: string) {
     const template: any = [
