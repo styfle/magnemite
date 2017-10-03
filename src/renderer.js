@@ -14,7 +14,7 @@ const config_1 = require("./config");
 function init() {
     return __awaiter(this, void 0, void 0, function* () {
         const dir = yield temporary_1.createTemp();
-        const rec = new recorder_1.Recorder(dir);
+        const rec = new recorder_1.Recorder(dir, document);
         const view = document.getElementById('webview');
         const loading = document.getElementById('loading');
         const issue = document.getElementById('issue');

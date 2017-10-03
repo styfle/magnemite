@@ -15,15 +15,16 @@ const config_1 = require("./config");
 const converter_1 = require("./converter");
 const file_1 = require("./file");
 class Recorder {
-    constructor(dir) {
+    constructor(dir, document) {
         this.baseDir = dir;
+        this.document = document;
     }
     startRecording(id) {
         return __awaiter(this, void 0, void 0, function* () {
             this.id = id;
             this.done = null;
             console.log('startRecording', this.id);
-            const stream = yield capturer_1.captureStream();
+            const stream = yield capturer_1.captureStream(this.document);
             const data = [];
             const r = new MediaRecorder(stream);
             this.recorder = r;

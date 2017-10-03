@@ -1,17 +1,16 @@
 import { desktopCapturer } from 'electron';
 
-const SECRET_KEY = 'Magnemite';
+const SECRET_KEY = 'magnemite_secret_key_to_find_window';
 
-export async function captureStream() {
+export async function captureStream(document: Document) {
     const origTitle = document.title;
     document.title = SECRET_KEY;
     const sources = await getSources();
     console.log('sources', sources);
-    const matching = sources.filter(src => src.name === SECRET_KEY);
-    if (matching.length === 0) {
+    const source = sources.find(src => src.name === SECRET_KEY);
+    if (!source) {
         throw new Error('Unable to find matching source');
     }
-    const source = matching[0];
     console.log('Found matching source with id: ', source.id);
     document.title = origTitle;
     const stream = await getMedia(source.id);

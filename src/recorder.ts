@@ -7,19 +7,21 @@ import { writeFileAsync, copyFileAsync } from './file';
 
 export class Recorder {
     private baseDir: string;
+    private document: Document;
     private recorder: MediaRecorder;
     private id: number;
     private done: Function | null;
 
-    constructor(dir: string) {
+    constructor(dir: string, document: Document) {
         this.baseDir = dir;
+        this.document = document;
     }
 
     async startRecording(id: number) {
         this.id = id;
         this.done = null;
         console.log('startRecording', this.id);
-        const stream = await captureStream();
+        const stream = await captureStream(this.document);
         const data: Blob[] = [];
         const r = new MediaRecorder(stream);
         this.recorder = r;

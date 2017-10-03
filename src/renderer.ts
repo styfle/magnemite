@@ -4,7 +4,7 @@ import { WEBVIEW_START_PAGE } from './config';
 
 async function init() {
     const dir = await createTemp();
-    const rec = new Recorder(dir);
+    const rec = new Recorder(dir, document);
     const view = document.getElementById('webview') as Electron.WebviewTag;
     const loading = document.getElementById('loading') as HTMLElement;
     const issue = document.getElementById('issue') as HTMLElement;
