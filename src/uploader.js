@@ -16,7 +16,7 @@ function uploadToServer(dir, host, port) {
         });
         socket.on('close', () => {
             console.log('close');
-            resolve();
+            resolve(dir);
         });
         socket.on('error', (err) => {
             reject(err);

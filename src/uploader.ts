@@ -18,7 +18,7 @@ export function uploadToServer(dir: string, host: string, port: number) {
     
         socket.on('close', () => {
             console.log('close');
-            resolve();
+            resolve(dir);
         });
 
         socket.on('error', (err: Error) => {
