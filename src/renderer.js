@@ -14,45 +14,42 @@ const config_1 = require("./config");
 function init() {
     return __awaiter(this, void 0, void 0, function* () {
         const dir = yield temporary_1.createTemp();
-        const rec = yield recorder_1.initRecorder(dir);
-        const webview = document.getElementById('webview');
+        const rec = new recorder_1.Recorder(dir);
+        const view = document.getElementById('webview');
         const loading = document.getElementById('loading');
         const issue = document.getElementById('issue');
         const back = document.getElementById('back');
         const forward = document.getElementById('forward');
-        var num = 0;
-        webview.addEventListener('did-start-loading', () => {
+        let num = 0;
+        view.addEventListener('did-start-loading', () => {
             loading.style.visibility = 'visible';
         });
-        webview.addEventListener('did-stop-loading', () => {
+        view.addEventListener('did-stop-loading', () => {
             loading.style.visibility = 'hidden';
         });
         back.addEventListener('click', () => {
-            webview.goBack();
+            view.goBack();
         });
         forward.addEventListener('click', () => {
-            webview.goForward();
+            view.goForward();
         });
-        webview.addEventListener('will-navigate', (e) => {
-            recorder_1.stopRecording();
+        view.addEventListener('will-navigate', (e) => {
+            rec.stopRecording();
         });
-        webview.addEventListener('did-navigate', (e) => {
-            num++;
-            recorder_1.startRecording(num);
+        view.addEventListener('did-navigate', (e) => {
+            rec.startRecording(++num);
         });
         issue.addEventListener('click', () => {
-            recorder_1.doneRecording(() => {
-                alert('Your bug report was submitted!');
-            });
+            rec.doneRecording(() => alert('Your bug report was submitted!'));
         });
-        webview.addEventListener('dom-ready', () => {
+        view.addEventListener('dom-ready', () => {
             if (process.env['NODE_ENV'] === 'development') {
-                webview.openDevTools();
+                view.openDevTools();
             }
-            back.disabled = !webview.canGoBack();
-            forward.disabled = !webview.canGoForward();
+            back.disabled = !view.canGoBack();
+            forward.disabled = !view.canGoForward();
         });
-        webview.src = config_1.WEBVIEW_START_PAGE;
+        view.src = config_1.WEBVIEW_START_PAGE;
     });
 }
 init();

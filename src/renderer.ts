@@ -1,57 +1,54 @@
 import { createTemp } from './temporary';
-import { initRecorder, startRecording, stopRecording, doneRecording } from './recorder';
+import { Recorder } from './recorder';
 import { WEBVIEW_START_PAGE } from './config';
-
 
 async function init() {
     const dir = await createTemp();
-    const rec = await initRecorder(dir);
-    const webview = document.getElementById('webview') as Electron.WebviewTag;
+    const rec = new Recorder(dir);
+    const view = document.getElementById('webview') as Electron.WebviewTag;
     const loading = document.getElementById('loading') as HTMLElement;
     const issue = document.getElementById('issue') as HTMLElement;
     const back = document.getElementById('back') as HTMLButtonElement;
     const forward = document.getElementById('forward') as HTMLButtonElement;
+    let num = 0;
 
-    var num = 0;
-
-    webview.addEventListener('did-start-loading', () => {
+    view.addEventListener('did-start-loading', () => {
         loading.style.visibility = 'visible';
     });
-    webview.addEventListener('did-stop-loading', () => {
+
+    view.addEventListener('did-stop-loading', () => {
         loading.style.visibility = 'hidden';
     });
 
     back.addEventListener('click', () => {
-        webview.goBack();
+        view.goBack();
     });
 
     forward.addEventListener('click', () => {
-        webview.goForward();
+        view.goForward();
     });
 
-    webview.addEventListener('will-navigate', (e: Event) => {
-        stopRecording();
+    view.addEventListener('will-navigate', (e: Event) => {
+        rec.stopRecording();
     });
-    webview.addEventListener('did-navigate', (e: Event) => {
-        num++;
-        startRecording(num);
+
+    view.addEventListener('did-navigate', (e: Event) => {
+        rec.startRecording(++num);
     });
 
     issue.addEventListener('click', () => {
-        doneRecording(() => {
-            alert('Your bug report was submitted!');
-        });
+        rec.doneRecording(() => alert('Your bug report was submitted!'));
     });
 
-    webview.addEventListener('dom-ready', () => {
+    view.addEventListener('dom-ready', () => {
         if (process.env['NODE_ENV'] === 'development') {
-            webview.openDevTools();
+            view.openDevTools();
         }
-        back.disabled = !webview.canGoBack();
-        forward.disabled = !webview.canGoForward();
+        back.disabled = !view.canGoBack();
+        forward.disabled = !view.canGoForward();
     });
 
-    webview.src = WEBVIEW_START_PAGE;
+    view.src = WEBVIEW_START_PAGE;
 }
 
 init();

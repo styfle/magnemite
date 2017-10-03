@@ -1,4 +1,4 @@
-const temp = require('temp');
+const temp = require('temp'); // TODO: add typings
 
 export function createTemp() {
     return new Promise<string>((resolve, reject) => {

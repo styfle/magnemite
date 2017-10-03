@@ -8,103 +8,60 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const electron_1 = require("electron");
 const path_1 = require("path");
+const capturer_1 = require("./capturer");
 const upload_1 = require("./upload");
 const config_1 = require("./config");
 const converter_1 = require("./converter");
 const file_1 = require("./file");
-const SECRET_KEY = 'Magnemite';
-const playall = 'playall.html';
-var videoDirectory = '/tmp/magnemite';
-var recorder;
-var blobs = [];
-var seqNumber;
-var done;
-function initRecorder(dir) {
-    videoDirectory = dir;
-    return file_1.copyFileAsync(path_1.join('./src', playall), path_1.join(videoDirectory, playall));
-}
-exports.initRecorder = initRecorder;
-function startRecording(num) {
-    seqNumber = num;
-    done = null;
-    console.log('startRecording', seqNumber);
-    const origTitle = document.title;
-    document.title = SECRET_KEY;
-    electron_1.desktopCapturer.getSources({ types: ['window', 'screen'] }, (error, sources) => {
-        if (error)
-            throw error;
-        console.log('sources', sources);
-        const matching = sources.filter(src => src.name === SECRET_KEY);
-        if (matching.length === 0) {
-            console.error('unable to find matching source');
+class Recorder {
+    constructor(dir) {
+        this.blobs = [];
+        this.baseDir = dir;
+    }
+    startRecording(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.id = id;
+            this.done = null;
+            console.log('startRecording', this.id);
+            const stream = yield capturer_1.captureStream();
+            this.blobs = [];
+            const r = new MediaRecorder(stream);
+            this.recorder = r;
+            r.onerror = (e) => console.error('recorder error ', e);
+            r.ondataavailable = (event) => {
+                console.log('event data recv');
+                this.blobs.push(event.data);
+            };
+            r.onstop = () => __awaiter(this, void 0, void 0, function* () {
+                const blob = new Blob(this.blobs, { type: 'video/webm' });
+                const ab = yield converter_1.toArrayBuffer(blob);
+                const bytes = converter_1.toTypedArray(ab);
+                const file = path_1.join(this.baseDir, `video-nav-${this.id}.webm`);
+                const path = yield file_1.writeFileAsync(file, bytes);
+                console.log('Saved video: ', path);
+                if (this.done) {
+                    const play = 'playall.html';
+                    yield file_1.copyFileAsync(path_1.join('./src', play), path_1.join(this.baseDir, play));
+                    yield upload_1.uploadToServer(this.baseDir, config_1.SERVER_HOST, config_1.SERVER_PORT);
+                    this.done();
+                }
+            });
+            return r.start();
+        });
+    }
+    stopRecording() {
+        console.log('stopRecording', this.id);
+        if (!this.recorder) {
+            console.log('nothing to stop', this.id);
             return;
         }
-        const source = matching[0];
-        console.log('found matching source ', source.id);
-        document.title = origTitle;
-        navigator.webkitGetUserMedia({
-            audio: false,
-            video: {
-                mandatory: {
-                    chromeMediaSource: 'desktop',
-                    chromeMediaSourceId: source.id,
-                    minWidth: 800,
-                    maxWidth: 1280,
-                    minHeight: 600,
-                    maxHeight: 720
-                }
-            }
-        }, handleStream, handleUserMediaError);
-    });
-}
-exports.startRecording = startRecording;
-function handleStream(stream) {
-    console.log('handleStream', seqNumber);
-    recorder = new MediaRecorder(stream);
-    blobs = [];
-    recorder.ondataavailable = handleRecorderData;
-    recorder.onerror = handleRecorderError;
-    recorder.onstop = handleRecorderStop;
-    recorder.start();
-}
-function stopRecording() {
-    console.log('stopRecording', seqNumber);
-    if (!recorder) {
-        console.log('nothing to stop', seqNumber);
-        return;
+        return this.recorder.stop();
     }
-    recorder.stop();
+    doneRecording(callback) {
+        console.log('doneRecording');
+        this.done = callback;
+        this.stopRecording();
+    }
 }
-exports.stopRecording = stopRecording;
-function doneRecording(callback) {
-    console.log('doneRecording');
-    done = callback;
-    stopRecording();
-}
-exports.doneRecording = doneRecording;
-function handleUserMediaError(e) {
-    console.error('handleUserMediaError', e);
-}
-function handleRecorderStop() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const blob = new Blob(blobs, { type: 'video/webm' });
-        const ab = yield converter_1.toArrayBuffer(blob);
-        const bytes = converter_1.toTypedArray(ab);
-        const file = path_1.join(videoDirectory, `video-nav-${seqNumber}.webm`);
-        const path = yield file_1.writeFileAsync(file, bytes);
-        console.log('Saved video: ' + path);
-        if (done) {
-            yield upload_1.uploadToServer(videoDirectory, config_1.SERVER_HOST, config_1.SERVER_PORT);
-            done();
-        }
-    });
-}
-function handleRecorderData(event) {
-    console.log('event data recv');
-    blobs.push(event.data);
-}
-function handleRecorderError(e) {
-    console.error('recorder error ', e);
-}
+exports.Recorder = Recorder;
