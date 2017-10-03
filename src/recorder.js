@@ -16,7 +16,6 @@ const converter_1 = require("./converter");
 const file_1 = require("./file");
 class Recorder {
     constructor(dir) {
-        this.blobs = [];
         this.baseDir = dir;
     }
     startRecording(id) {
@@ -25,16 +24,16 @@ class Recorder {
             this.done = null;
             console.log('startRecording', this.id);
             const stream = yield capturer_1.captureStream();
-            this.blobs = [];
+            const data = [];
             const r = new MediaRecorder(stream);
             this.recorder = r;
             r.onerror = (e) => console.error('recorder error ', e);
             r.ondataavailable = (event) => {
                 console.log('event data recv');
-                this.blobs.push(event.data);
+                data.push(event.data);
             };
             r.onstop = () => __awaiter(this, void 0, void 0, function* () {
-                const blob = new Blob(this.blobs, { type: 'video/webm' });
+                const blob = new Blob(data, { type: 'video/webm' });
                 const ab = yield converter_1.toArrayBuffer(blob);
                 const bytes = converter_1.toTypedArray(ab);
                 const file = path_1.join(this.baseDir, `video-nav-${this.id}.webm`);
@@ -53,7 +52,7 @@ class Recorder {
     stopRecording() {
         console.log('stopRecording', this.id);
         if (!this.recorder) {
-            console.log('nothing to stop', this.id);
+            console.error('Nothing to stop', this.id);
             return;
         }
         return this.recorder.stop();

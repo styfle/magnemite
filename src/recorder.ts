@@ -8,7 +8,6 @@ import { writeFileAsync, copyFileAsync } from './file';
 export class Recorder {
     private baseDir: string;
     private recorder: MediaRecorder;
-    private blobs: Blob[] = [];
     private id: number;
     private done: Function | null;
 
@@ -21,16 +20,16 @@ export class Recorder {
         this.done = null;
         console.log('startRecording', this.id);
         const stream = await captureStream();
-        this.blobs = [];
+        const data: Blob[] = [];
         const r = new MediaRecorder(stream);
         this.recorder = r;
         r.onerror = (e) => console.error('recorder error ', e);
         r.ondataavailable = (event: BlobEvent) => {
             console.log('event data recv');
-            this.blobs.push(event.data);
+            data.push(event.data);
         };
         r.onstop = async () => {
-            const blob = new Blob(this.blobs, { type: 'video/webm' });
+            const blob = new Blob(data, { type: 'video/webm' });
             const ab = await toArrayBuffer(blob);
             const bytes = toTypedArray(ab);
             const file = join(this.baseDir, `video-nav-${this.id}.webm`);
@@ -50,7 +49,7 @@ export class Recorder {
     stopRecording() {
         console.log('stopRecording', this.id);
         if (!this.recorder) {
-            console.log('nothing to stop', this.id);
+            console.error('Nothing to stop', this.id);
             return;
         }
         return this.recorder.stop();
