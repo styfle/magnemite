@@ -52,3 +52,4 @@ test('captureStream resolve', async (t) => {
     t.equal(data, stream);
     t.equal(document.title, title);
 });
+//# sourceMappingURL=capturer-test.js.map

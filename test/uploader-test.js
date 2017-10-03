@@ -40,3 +40,4 @@ test('uploadToServer', async (t) => {
     const dir = await uploader.uploadToServer(baseDir, host, port);
     t.equal(dir, baseDir);
 });
+//# sourceMappingURL=uploader-test.js.map

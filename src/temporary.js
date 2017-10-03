@@ -15,3 +15,4 @@ function createTemp() {
     });
 }
 exports.createTemp = createTemp;
+//# sourceMappingURL=temporary.js.map

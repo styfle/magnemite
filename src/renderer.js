@@ -43,3 +43,4 @@ async function init() {
     view.src = config_1.WEBVIEW_START_PAGE;
 }
 init();
+//# sourceMappingURL=renderer.js.map

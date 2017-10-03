@@ -22,3 +22,4 @@ electron_1.app.on('activate', () => {
         createWindow();
     }
 });
+//# sourceMappingURL=main.js.map

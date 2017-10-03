@@ -8,3 +8,4 @@ test('config', t => {
     t.equal(typeof config_1.SERVER_PORT, 'number');
     t.equal(typeof config_1.WEBVIEW_START_PAGE, 'string');
 });
+//# sourceMappingURL=config-test.js.map

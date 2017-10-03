@@ -20,3 +20,4 @@ const server = net_1.createServer(socket => {
     });
 }).listen(config_1.SERVER_PORT, config_1.SERVER_HOST);
 console.log(`Listening on ${config_1.SERVER_HOST}:${config_1.SERVER_PORT}`);
+//# sourceMappingURL=server.js.map

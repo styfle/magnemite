@@ -29,3 +29,4 @@ function toBuffer(ab) {
     return buffer;
 }
 exports.toBuffer = toBuffer;
+//# sourceMappingURL=converter.js.map

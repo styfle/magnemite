@@ -12,3 +12,4 @@ test('toTypedArray', t => {
         t.equal(actual[i], expected[i]);
     });
 });
+//# sourceMappingURL=converter-test.js.map

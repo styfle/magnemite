@@ -43,3 +43,4 @@ function getMedia(navigator, sourceId) {
         }, stream => resolve(stream), err => reject(err));
     });
 }
+//# sourceMappingURL=capturer.js.map

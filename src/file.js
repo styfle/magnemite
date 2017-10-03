@@ -30,3 +30,4 @@ function copyFileAsync(src, dst) {
     });
 }
 exports.copyFileAsync = copyFileAsync;
+//# sourceMappingURL=file.js.map

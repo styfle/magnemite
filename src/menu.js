@@ -123,3 +123,4 @@ function setMenu(win, appname) {
     electron_1.Menu.setApplicationMenu(menu);
 }
 exports.setMenu = setMenu;
+//# sourceMappingURL=menu.js.map

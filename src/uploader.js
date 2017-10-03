@@ -24,3 +24,4 @@ function uploadToServer(dir, host, port) {
     });
 }
 exports.uploadToServer = uploadToServer;
+//# sourceMappingURL=uploader.js.map
