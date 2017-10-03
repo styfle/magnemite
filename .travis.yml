@@ -33,9 +33,11 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$PATH"
 
 install:
-- yarn
+- yarn install
 
 script:
+  - yarn run build
+  - yarn run test
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then yarn dist; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then yarn dist -- --mac --win; fi
 
