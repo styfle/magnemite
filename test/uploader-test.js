@@ -9,8 +9,8 @@ test('uploadToServer', async (t) => {
     const port = 51234;
     const data = [1, 3, 3, 7];
     const stream = {
-        on: (event, o) => {
-            t.true(!!event);
+        on: (event) => {
+            t.equal(typeof event, 'string');
         }
     };
     const tar = {

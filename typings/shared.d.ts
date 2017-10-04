@@ -13,7 +13,19 @@ interface BlobEvent {
 }
 
 type GetUserMediaFunction = (
-    options: { video?: any; audio?: boolean; },
+    options: {
+        audio: boolean,
+        video: {
+            mandatory: {
+                chromeMediaSource: string,
+                chromeMediaSourceId: string,
+                minWidth: number,
+                maxWidth: number,
+                minHeight: number,
+                maxHeight: number
+            }
+        }
+    },
     success: (stream: MediaStream) => void,
     error: (error: Error) => void
 ) => void;

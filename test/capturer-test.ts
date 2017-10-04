@@ -13,9 +13,9 @@ test('captureStream reject with getSources error', async t => {
 
     const electron = {
         desktopCapturer: {
-            getSources: (o: any, callback: Function) => {
+            getSources: (o: { types: string[] }, callback: Function) => {
                 t.equal(o.types.length, 2);
-                callback(error, sources)
+                callback(error, sources);
             }
         }
     };
@@ -46,7 +46,7 @@ test('captureStream resolve', async t => {
 
     const electron = {
         desktopCapturer: {
-            getSources: (o: any, callback: Function) => {
+            getSources: (o: { types: string[] }, callback: Function) => {
                 t.equal(o.types.length, 2);
                 callback(error, sources)
             }

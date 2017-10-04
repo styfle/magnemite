@@ -9,13 +9,13 @@ test('uploadToServer', async t => {
     const data = [1, 3, 3, 7];
 
     const stream = {
-        on: (event: string, o: any) => {
-            t.true(!!event); // 2x
+        on: (event: string) => {
+            t.equal(typeof event, 'string'); // 2x
         }
     };
 
     const tar = {
-        create: (o: any, dirs: string[]) => {
+        create: (o: { gzip: boolean, portable: boolean }, dirs: string[]) => {
             t.equal(o.gzip, true);
             t.equal(o.portable, true);
             t.equal(dirs[0], baseDir);
@@ -24,7 +24,7 @@ test('uploadToServer', async t => {
     };
 
     const socket = {
-        write: (o: any) => {
+        write: (o: Buffer) => {
             t.equal(o, data);
         },
         on: (event: string) => {
@@ -33,7 +33,7 @@ test('uploadToServer', async t => {
     };
 
     const net = {
-        createConnection: (o: any) => {
+        createConnection: (o: { host: string, port: number }) => {
             t.equal(o.host, host);
             t.equal(o.port, port);
             return socket;
