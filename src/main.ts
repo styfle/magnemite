@@ -34,5 +34,8 @@ app.on('activate', () => {
 });
 
 app.on('quit', () => {
-    cleanup();
+    cleanup();  // TODO: cleanup doesn't work because
+                // temp was created in renderer process
+                // but this is the main process...
+                // maybe try inter-process communication
 });

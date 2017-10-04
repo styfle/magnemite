@@ -27,6 +27,23 @@ Did your end user report a bug in your web app? Whether you are a Support team, 
 - The video files need to be saved to disk each time the user navigates to a new page
 - Sometimes its nice to prove the bug reproduces in Chrome.....Magnemite is built on Electron which is built on Chrome
 
+## How is this different than other screen recorders?
+
+Other screen recorders are usually general purpose and designed for tech-savy users. For example, [kap](https://github.com/wulkano/kap) or QuickTime's New Screen Recording work well when you are recording your screen for a demo.
+
+But these tools are difficult for a Support Team to explain to a user because you need to answer the following questions:
+
+- What part of the screen should be recorded? The whole screen, the browser, or the tab?
+- Where are the files saved to disk? To the desktop or someplace else?
+- How can the files be sent to the support team? Email? What if it's too big?
+
+Magnemite solves this specific use case by answering these questions in the following way:
+
+
+- What part of the screen should be recorded? Only the tab, in fact it runs as a separate app.
+- Where are the files saved to disk? To a temp directory.
+- How can the files be sent to the support team? Uploaded instantly upon reporting bug. See the `server.ts` file.
+
 ## Getting started
 
 Clone this repository
