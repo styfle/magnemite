@@ -23,6 +23,7 @@ async function init() {
         view.goBack();
     });
     forward.addEventListener('click', () => {
+        rec.stopRecording();
         view.goForward();
     });
     view.addEventListener('will-navigate', (e) => {

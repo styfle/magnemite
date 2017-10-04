@@ -94,13 +94,18 @@
 
 		function playFirstVideo() {
 			//video.style.display = 'visible';
-			ul.innerHTML = '';
+			//ul.innerHTML = '';
 			seqNumber = 0;
 			playNextVideo();
 		}
 
-		function playNextVideo(num) {
+		function playNextVideo() {
 			seqNumber++;
+			playVideo(seqNumber);
+		}
+
+		function playVideoFrom(num) {
+			seqNumber = num;
 			playVideo(seqNumber);
 		}
 
@@ -162,7 +167,7 @@
 			const li = document.createElement('li');
 			li.textContent = `Part ${num}`;
 			li.classList.add('playing');
-			li.addEventListener('click', () => playVideo(num));
+			li.addEventListener('click', () => playVideoFrom(num));
 			li.setAttribute('data-seq-number', num);
 			ul.appendChild(li);
 			return li;
