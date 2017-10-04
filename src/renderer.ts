@@ -21,10 +21,12 @@ async function init() {
     });
 
     back.addEventListener('click', () => {
+        rec.stopRecording();
         view.goBack();
     });
 
     forward.addEventListener('click', () => {
+        rec.stopRecording();
         view.goForward();
     });
 

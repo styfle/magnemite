@@ -19,6 +19,7 @@ async function init() {
         loading.style.visibility = 'hidden';
     });
     back.addEventListener('click', () => {
+        rec.stopRecording();
         view.goBack();
     });
     forward.addEventListener('click', () => {
