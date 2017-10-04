@@ -1,5 +1,6 @@
 import { app, BrowserWindow } from 'electron';
 import { setMenu } from './menu';
+import { cleanup } from './temporary';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -30,4 +31,8 @@ app.on('activate', () => {
     if (mainWindow === null) {
         createWindow();
     }
+});
+
+app.on('quit', () => {
+    cleanup();
 });

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
 const menu_1 = require("./menu");
+const temporary_1 = require("./temporary");
 let mainWindow;
 function createWindow() {
     mainWindow = new electron_1.BrowserWindow({ width: 1024, height: 768 });
@@ -21,5 +22,8 @@ electron_1.app.on('activate', () => {
     if (mainWindow === null) {
         createWindow();
     }
+});
+electron_1.app.on('quit', () => {
+    temporary_1.cleanup();
 });
 //# sourceMappingURL=main.js.map
