@@ -130,7 +130,7 @@
 				}
 			});
 
-			video.addEventListener('playing', () => {
+			video.addEventListener('durationchange', () => {
 				const duration = getDuration(video);
 				li.textContent = `Part ${num} (${duration})`;
 			});
