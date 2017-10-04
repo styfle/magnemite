@@ -5,6 +5,7 @@
         "**/.DS_Store": true,
         "**/*.js.map": true,
         "**/*.js": {"when": "$(basename).ts"},
-        "node_modules": true
+        "node_modules": true,
+        "var": true
     }
 }
