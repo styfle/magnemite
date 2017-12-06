@@ -26,7 +26,7 @@
   "devDependencies": {
     "@types/tape": "^4.2.30",
     "@types/tar": "^4.0.0",
-    "electron": "1.7.8",
+    "electron": "^1.8.2-beta.3",
     "electron-builder": "^19.27.7",
     "proxyquire": "^1.8.0",
     "tape": "^4.8.0",
