@@ -5,10 +5,6 @@
 [![devDependency Status](https://david-dm.org/styfle/magnemite/dev-status.svg)](https://david-dm.org/styfle/magnemite#info=devDependencies)
 [![Build Status](https://travis-ci.org/styfle/magnemite.svg?branch=master)](https://travis-ci.org/styfle/magnemite)
 
-<a target='_blank' rel='nofollow' href='https://app.codesponsor.io/link/fnqaM5soqgNJruSNFm8pdqUw/styfle/magnemite'>
-  <img alt='Sponsor' width='888' height='68' src='https://app.codesponsor.io/embed/fnqaM5soqgNJruSNFm8pdqUw/styfle/magnemite.svg' />
-</a>
-
 Magnemite is a screen recorder for websites, built with [Electron](https://electron.atom.io).
 
 Magnemite is useful for getting [🐞 repro steps](https://blogs.msdn.microsoft.com/scottos/2008/08/22/the-value-of-repro-steps-and-why-you-should-care/) from an end user in the form of a video recording 📹.
