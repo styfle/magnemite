@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/styfle/magnemite#readme",
   "devDependencies": {
-    "@types/tape": "^4.2.30",
+    "@types/tape": "^4.2.31",
     "@types/tar": "^4.0.0",
     "electron": "^1.8.2-beta.3",
     "electron-builder": "^19.27.7",
