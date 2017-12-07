@@ -1,4 +1,4 @@
-osx_image: xcode8.3
+osx_image: xcode9.1
 
 dist: trusty
 sudo: false
@@ -45,5 +45,5 @@ before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
 
 branches:
-  except:
-    - "/^v\\d+\\.\\d+\\.\\d+$/"
+  only:
+    - "master"
