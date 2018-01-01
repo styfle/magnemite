@@ -28,7 +28,7 @@
     "@types/tape": "^4.2.31",
     "@types/tar": "^4.0.0",
     "electron": "^1.8.2-beta.3",
-    "electron-builder": "^19.48.2",
+    "electron-builder": "^19.50.0",
     "proxyquire": "^1.8.0",
     "tape": "^4.8.0",
     "typescript": "^2.6.2"
