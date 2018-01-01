@@ -34,7 +34,7 @@
     "typescript": "^2.6.2"
   },
   "dependencies": {
-    "tar": "^4.1.1",
+    "tar": "^4.2.0",
     "temp": "^0.8.3"
   },
   "productName": "Magnemite",
