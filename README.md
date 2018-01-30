@@ -58,9 +58,11 @@ Install dependencies
 npm install
 ```
 
-Update the config file
+Update the config file `src/config.ts` 
 
-Edit `src/config.ts` with a startup page (your website) and the server endpoint which is where you will deploy `src/server.js`, a standalone script that will save receive the bug report.
+- `WEBVIEW_START_PAGE` - your website which is used when the user launchs Magnemite for the first time
+- `SERVER_HOST` - the hostname of the server where you deployed `src/server.js`
+- `SERVER_PORT` - the port of the server where you deployed `src/server.js` (optional)
 
 Build the code
 
