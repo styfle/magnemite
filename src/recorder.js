@@ -8,6 +8,9 @@ const converter_1 = require("./converter");
 const file_1 = require("./file");
 class Recorder {
     constructor(dir, document) {
+        this.recorder = null;
+        this.id = -1;
+        this.done = null;
         this.secret = 'magnemite_secret_key_to_find_window';
         this.baseDir = dir;
         this.document = document;

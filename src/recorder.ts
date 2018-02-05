@@ -9,9 +9,9 @@ export class Recorder {
     private baseDir: string;
     private document: Document;
     private navigator: Navigator;
-    private recorder: MediaRecorder;
-    private id: number;
-    private done: Function | null;
+    private recorder: MediaRecorder | null = null;
+    private id = -1;
+    private done: Function | null = null;
     private readonly secret = 'magnemite_secret_key_to_find_window';
 
     constructor(dir: string, document: Document) {
