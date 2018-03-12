@@ -25,7 +25,7 @@
   "homepage": "http://magnemite.ceriously.com",
   "devDependencies": {
     "@types/proxyquire": "^1.3.28",
-    "@types/tape": "^4.2.31",
+    "@types/tape": "^4.2.32",
     "@types/tar": "^4.0.0",
     "electron": "^2.0.0-beta.3",
     "electron-builder": "^20.4.1",
