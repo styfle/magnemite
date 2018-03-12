@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/styfle/magnemite/issues"
   },
-  "homepage": "https://github.com/styfle/magnemite#readme",
+  "homepage": "http://magnemite.ceriously.com",
   "devDependencies": {
     "@types/proxyquire": "^1.3.28",
     "@types/tape": "^4.2.31",
