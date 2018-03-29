@@ -13,7 +13,7 @@ Did your end user report a bug in your web app? Whether you are a Support team, 
 
 ## Docs
 
-[Read the docs](http://magnemite.ceriously.com) for more info.
+[Read the docs](https://magnemite.ceriously.com) for more info.
 
 ## Authors
 
