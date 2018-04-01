@@ -31,7 +31,7 @@
     "electron-builder": "^20.4.1",
     "proxyquire": "^2.0.0",
     "tape": "^4.9.0",
-    "typescript": "^2.7.2"
+    "typescript": "^2.8.1"
   },
   "dependencies": {
     "tar": "^4.4.0",
