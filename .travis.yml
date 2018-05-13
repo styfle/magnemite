@@ -47,3 +47,6 @@ before_cache:
 branches:
   only:
     - "master"
+
+git:
+  depth: 5
