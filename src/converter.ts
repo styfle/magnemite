@@ -2,7 +2,7 @@ export function toArrayBuffer(blob: Blob) {
     return new Promise<ArrayBuffer>((resolve, reject) => {
         let fileReader = new FileReader();
         fileReader.onload = function(ev) {
-            let arrayBuffer: ArrayBuffer = this.result;
+            let arrayBuffer = this.result;
             if (arrayBuffer) {
                 resolve(arrayBuffer);
             } else {
