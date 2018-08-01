@@ -5,7 +5,7 @@ function toArrayBuffer(blob) {
         let fileReader = new FileReader();
         fileReader.onload = function (ev) {
             let arrayBuffer = this.result;
-            if (arrayBuffer) {
+            if (arrayBuffer instanceof ArrayBuffer) {
                 resolve(arrayBuffer);
             }
             else {

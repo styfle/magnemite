@@ -3,7 +3,7 @@ export function toArrayBuffer(blob: Blob) {
         let fileReader = new FileReader();
         fileReader.onload = function(ev) {
             let arrayBuffer = this.result;
-            if (arrayBuffer) {
+            if (arrayBuffer instanceof ArrayBuffer) {
                 resolve(arrayBuffer);
             } else {
                 reject(new Error('Failed to convert Blob to ArrayBuffer'));
