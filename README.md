@@ -17,4 +17,4 @@ Did your end user report a bug in your web app? Whether you are a Support team, 
 
 ## Authors
 
-Developed by [ceriousy.com](https://www.ceriously.com)
+Developed by [ceriously.com](https://www.ceriously.com)
