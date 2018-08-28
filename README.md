@@ -1,9 +1,9 @@
 # Magnemite
 
 ![img](http://magnemite.ceriously.com/magnemite.gif)
-[![Dependency Status](https://david-dm.org/styfle/magnemite.svg)](https://david-dm.org/styfle/magnemite)
-[![devDependency Status](https://david-dm.org/styfle/magnemite/dev-status.svg)](https://david-dm.org/styfle/magnemite#info=devDependencies)
-[![Build Status](https://travis-ci.org/styfle/magnemite.svg?branch=master)](https://travis-ci.org/styfle/magnemite)
+[![Dependency Status](https://badgen.net/david/dep/styfle/magnemite)](https://david-dm.org/styfle/magnemite)
+[![devDependency Status](https://badgen.net/david/dev/styfle/magnemite)](https://david-dm.org/styfle/magnemite?type=dev)
+[![Build Status](https://badgen.net/travis/styfle/magnemite)](https://travis-ci.org/styfle/magnemite)
 
 Magnemite is a screen recorder for websites, built with [Electron](https://electron.atom.io).
 
