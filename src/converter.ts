@@ -18,10 +18,5 @@ export function toTypedArray(ab: ArrayBuffer) {
 }
 
 export function toBuffer(ab: ArrayBuffer) {
-    let buffer = Buffer.alloc(ab.byteLength);
-    let arr = new Uint8Array(ab); // TODO: can we just return Uint8Array?
-    for (let i = 0; i < arr.byteLength; i++) {
-        buffer[i] = arr[i];
-    }
-    return buffer;
+    return Buffer.from(ab);
 }
